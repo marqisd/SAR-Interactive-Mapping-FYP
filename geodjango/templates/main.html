@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 <body onload="onLoad()">
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
-        <div id="map" width=window.innerWidth height=window.innerHeight class="map"></div>
+        <div id="map" width=window.innerWidth height=window.innerHeight class="map" style="z-index:1"></div>
         <script type="text/javascript">
             var map = new ol.Map({
                 target: 'map',
@@ -21,20 +21,24 @@
             var satLayer = new ol.layer.Tile({source: new ol.source.XYZ({url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maxZoom: 19}), className: 'sat'});
             map.addLayer(satLayer);
         </script>
+    <fieldset id="menuMinMap" style="z-index:1998" class="menuMinMap">
+        <button onclick="satLayer.setVisible(true)" class="buttonMap">Satellite</button> 
+        <button onclick="satLayer.setVisible(false)" class="buttonMap">Map</button> 
+    </fieldset>
     <p><table>
        <tr>
             <td>
             <fieldset id="menuMain" style="z-index:999" class="menu">
-                <button style="height: 100px; width: 400px;" onclick="hideMenu('menuAss')" class="button">Assign</button>
-                <button style="height: 100px; width: 400px;" onclick="hideMenu('menuAnn')" class="button">Annotate</button>
-                <button style="height: 100px; width: 400px;" onclick="hideMenu('menuFeat')" class="button">Features</button>
-                <button style="height: 100px; width: 400px;" onclick="hideMenu('menuSeg')" class="button">Segments</button> 
-                <button style="height: 100px; width: 400px;" onclick="hideMenu('menuProf')" class="button">Profile</button> 
-                <button style="height: 100px; width: 400px;" onclick="satLayer.setVisible(false)" class="buttonOp">Options</button>   
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAss')" class="button">Assign</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAnn')" class="button">Annotate</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuFeat')" class="button">Features</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuSeg')" class="button">Segments</button> 
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuProf')" class="button">Profile</button> 
+                <button style="height: 100px; width: 250px;" onclick="change_back()" class="buttonOp">Options</button>   
             </fieldset>
             </td>
             <td>
-            <fieldset id="menuAss" class="menu" onload="hideSelf('menuAss')">
+            <fieldset id="menuAss" class="menu" style="z-index:5" onload="hideSelf('menuAss')">
                 <h1>Assign</h1>
                     <select name="Resource" style="height: 100px; width: 400px;" id="Resource" class="dropdown">
                         <option value="pt">Personnel</option>
@@ -55,32 +59,32 @@
             </fieldset>
             </td>
             <td>
-            <fieldset id="menuAnn" class="menu" onload="hideSelf('menuAnn')">
+            <fieldset id="menuAnn" class="menu" style="z-index:6" onload="hideSelf('menuAnn')">
                 <h1>Annotate</h1>
                 <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Pencil</button>
                 <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Line</button> 
                 <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Rectangle</button> 
                 <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Circle</button> 
 
-                <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
             </fieldset>
             </td>
             <td>
-            <fieldset id="menuFeat" class="menu" onload="hideSelf('menuFeat')">
+            <fieldset id="menuFeat" class="menu" style="z-index:7" onload="hideSelf('menuFeat')">
                 <h1>Features</h1>
-                <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
             </fieldset>
             </td>
             <td>
-            <fieldset id="menuSeg" class="menu" onload="hideSelf('menuSeg')">
+            <fieldset id="menuSeg" class="menu" style="z-index:8" onload="hideSelf('menuSeg')">
                 <h1>Segment</h1>
-                <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
             </fieldset>
             </td>
             <td>
-            <fieldset id="menuProf" class="menu" onload="hideSelf('menuProf')">
+            <fieldset id="menuProf" class="menu" style="z-index:9" onload="hideSelf('menuProf')">
                 <h1>Profile</h1>
-                <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
             </fieldset>
             </td>
         </tr>
