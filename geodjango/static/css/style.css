@@ -1,13 +1,21 @@
 .menu{
-    width     : 400px;
+    width     : 250px;
     height: 100%;
     position  : absolute;
     left      : 0px;
     top       : 40px; 
-    background: #666666;
+    background: #00000072;
     border    : 1px solid #ffa500;
 }
-
+.menuMinMap{
+    background: #1111113d;
+    border    : 1px solid #6666663d;
+    width     : 200px;
+    height    : 250px;
+    top       : 90px; 
+    position  : absolute;
+    left      : 83vw;
+}
 
 #title {
     position  : absolute;
@@ -18,7 +26,7 @@
     font-family: Arial, Helvetica, sans-serif;
     background: #ffa500; 
     color     : #ffffff;
-    width     : 400px;
+    width     : 250px;
     height    : 100px;
     font-size: 50px;
     border    : 1px solid #ffa500;
@@ -28,12 +36,28 @@
     background-color: #dda500;
     color: white;
     }
+
+.buttonMap{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #666666; 
+    color     : #ffffff;
+    width     : 190px;
+    height    : 80px;
+    font-size: 50px;
+    border    : 1px solid #ffffff;
+    box-shadow: rgba(0, 0, 0, .75) 0 5px 6px;
+    align-content: center;
+}
+.buttonMap:hover {
+    background-color: #ffffff;
+    color: white;
+    }
         
 .buttonOp{
     font-family: Arial, Helvetica, sans-serif;
     background: #ffa500; 
     color     : #ffffff;
-    width     : 400px;
+    width     : 250px;
     height    : 100px;
     font-size: 50px;
     border    : 1px solid #ffa500;
