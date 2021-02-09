@@ -1,0 +1,109 @@
+.menu{
+    width     : 400px;
+    height: 100%;
+    position  : absolute;
+    left      : 0px;
+    top       : 40px; 
+    background: #666666;
+    border    : 1px solid #ffa500;
+}
+
+
+#title {
+    position  : absolute;
+    left      : 500px;
+}
+
+.button{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffa500; 
+    color     : #ffffff;
+    width     : 400px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+.button:hover {
+    background-color: #dda500;
+    color: white;
+    }
+        
+.buttonOp{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffa500; 
+    color     : #ffffff;
+    width     : 400px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+    position  : absolute;
+    left      : 10px;
+    top       : 800px; 
+}
+.buttonOp:hover {
+    background-color: #dda500;
+    color: white;
+    }
+.resettool {
+    background: #ffa500; 
+    color     : #000000;
+    width     : 200px;
+    height    : 100px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}     
+
+h1{
+    font-size: 50px;  
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color     : #ffffff;
+}
+.dropdown{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff; 
+    color     : #000000;
+    width     : 400px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+
+}
+.textForm{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff; 
+    color     : #000000;
+    width     : 400px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+.text1 {
+    font-family: Arial, Helvetica, sans-serif; 
+    color     : #ffffff;
+    font-size: 50px;
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+    position  : absolute;
+    left      : 0px;
+    top       : 40px; 
+  }
+
+.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
