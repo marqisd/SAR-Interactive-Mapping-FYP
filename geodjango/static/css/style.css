@@ -8,13 +8,12 @@
     border    : 1px solid #ffa500;
 }
 .menuMinMap{
-    background: #1111113d;
+    background: #ffffff3d;
     border    : 1px solid #6666663d;
     width     : 200px;
-    height    : 250px;
     top       : 90px; 
     position  : absolute;
-    left      : 83vw;
+    left      : 75vw;
 }
 
 #title {
@@ -41,9 +40,9 @@
     font-family: Arial, Helvetica, sans-serif;
     background: #666666; 
     color     : #ffffff;
-    width     : 190px;
-    height    : 80px;
-    font-size: 50px;
+    width     : 100px;
+    height    : 40px;
+    font-size: 20px;
     border    : 1px solid #ffffff;
     box-shadow: rgba(0, 0, 0, .75) 0 5px 6px;
     align-content: center;
@@ -83,7 +82,7 @@ h1{
     font-size: 50px;  
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    color     : #ffffff;
+    color     : #000000;
 }
 .dropdown{
     font-family: Arial, Helvetica, sans-serif;

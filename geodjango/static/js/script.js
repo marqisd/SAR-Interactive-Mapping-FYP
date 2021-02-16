@@ -4,6 +4,7 @@ function hideSelf(iD) {
 }
 
 function onLoad() {
+    document.getElementById("menuMain").style.display="none"  
     document.getElementById("menuAss").style.display="none"  
     document.getElementById("menuAnn").style.display="none"  
     document.getElementById("menuFeat").style.display="none"  
