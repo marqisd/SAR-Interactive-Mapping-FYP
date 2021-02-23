@@ -33,6 +33,10 @@
     width: 250px;
     border-left    : 6px solid #ffa500;
 }
+.ol-layer{
+    width:100%
+
+}
 .ol-zoom-in{
     position  : absolute;
     background: #ffffff99;
@@ -69,6 +73,9 @@
     background: #ffffffdd;
     width: 90px;
     border-left    : 6px solid #ffa500;
+}
+#hillshade{
+    background: #000000;
 }
 .buttonMap{
     font-family: "Lucida Console", "Courier New", monospace;

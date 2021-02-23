@@ -48,7 +48,6 @@
         <button class="circleMenuEmpty" id="lMenuW"  style="z-index:3001"></button>
         <button class="circleMenuEmpty" id="lMenuNW"  style="z-index:3001"></button>
     </div>
-    
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -128,23 +127,15 @@
             });
         map.addLayer(streetsL);
 
-        var terrainL = new ol.layer.VectorTile({
+        var terrainL = new ol.layer.MapboxVector({
             declutter: true,
             zIndex: 51,
             className: 'terrainL',
-            opacity: 0.3,
-            source: new ol.source.VectorTile({
-                attributions:
-                '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
-                '© <a href="https://www.openstreetmap.org/copyright">' +
-                'OpenStreetMap contributors</a>',
-                format: new ol.format.MVT(),
-                url:
-                'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2/' +
-                '{z}/{x}/{y}.vector.pbf?access_token=' +
-                key,
+            opacity: 1,
+            styleUrl:'mapbox://styles/marqi/cklhwqmyl0zn517o1llp1rdrj',
+            accessToken: key,
             })
-            })
+        
         map.addLayer(terrainL);
 
         function vectorLayerListener() {

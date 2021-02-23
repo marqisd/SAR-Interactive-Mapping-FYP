@@ -64,7 +64,7 @@ function onLoad() {
     ele.classList.add("shrink");
     hideLayerMenu();
     hideMenuMain(); 
-    document.getElementById("menuMinMap").style.display="block" ;   
+    document.getElementById("menuMinMap").style.display="none" ;   
 }
 
 
