@@ -2,7 +2,9 @@
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-<body onload="onLoad()">
+<body onload="onLoad()">    
+    <button id="Sat." onclick="showSat()" class="buttonMapSat" style="z-index:1998; top:10px;"> Sat.</button>
+    <button id="Map."  onclick="hideSat()" class="buttonMapSat" style="z-index:1998; top:70px;"> Map</button>
     <fieldset id="menuMinMap" style="z-index:1998" class="menuMinMap">
         <h1>Temporary Dev Menu</h1>
         <button onclick="satLayer.setVisible(true)" class="buttonMap">Satellite</button> 
@@ -24,258 +26,233 @@
         <input class="form-control mr-2 mb-2 mt-2" type="button" value="Undo" id="undo">
         </form>
     </fieldset>
-    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
-        <div id="map" width=window.innerWidth height=window.innerHeight class="map" style="z-index:1"></div>
-        <span id="status"></span>   
-        <script type="text/javascript">
-            var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
-            var source = new ol.source.Vector({wrapX: false});
-            var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
-            var view = new ol.View({
-                center: [0, 0],
-                zoom: 2,
-            });
-            var geolocation = new ol.Geolocation({
-            // enableHighAccuracy must be set to true to have the heading value.
-                trackingOptions: {
-                    enableHighAccuracy: true,
-                },
-                projection: view.getProjection(),
-            });
-            function el(id) {
-                return document.getElementById(id);
-            }
-            el('track').addEventListener('change', function () {
-                geolocation.setTracking(this.checked);
-            });
+    <div class="menuMainSet" id="menuMainSet" style="z-index:3001">
+        <button class="circleMenuCenter" id="cMenuMain" onclick="hideMenuMain()" style="z-index:3001">X</button>
+        <button class="circleMenuOuter" id="cMenuN" style="z-index:3001">Assign</button>
+        <button class="circleMenuOuter" id="cMenuNE"  style="z-index:3001">Features</button>
+        <button class="circleMenuOuter" id="cMenuE"  style="z-index:3001">Segment</button>
+        <button class="circleMenuOuter" id="cMenuSE"  style="z-index:3001">Spare</button>
+        <button class="circleMenuOuter" id="cMenuS"  style="z-index:3001">Options</button>
+        <button class="circleMenuOuter" id="cMenuSW" onclick="openMenuLayers()" style="z-index:3001" >Layers</button>
+        <button class="circleMenuOuter" id="cMenuW"  style="z-index:3001">Profile</button>
+        <button class="circleMenuOuter" id="cMenuNW"  style="z-index:3001">Draw</button>
+    </div>
+    <div class="menuLayersSet" id="menuLayerSet" style="z-index:3001">
+        <button class="circleMenuCenter" id="lMenuMain"  onclick= "layerMenuBack()" style="z-index:3001; font-size:35px">Back</button>
+        <button class="circleMenuOuter" id="lMenuN" onclick= "toggleStreets()" style="z-index:3001">Streets</button>
+        <button class="circleMenuOuter" id="lMenuNE" onclick= "toggleTerrain()"  style="z-index:3001">Terrain</button>
+        <button class="circleMenuEmpty" id="lMenuE"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="lMenuSE"  style="z-index:3001"></button>
+        <button class="circleMenuOuter" id="lMenuS" onclick= " hideLayerMenu()"  style="z-index:3001">X</button>
+        <button class="circleMenuEmpty" id="lMenuSW" style="z-index:3001" ></button>
+        <button class="circleMenuEmpty" id="lMenuW"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="lMenuNW"  style="z-index:3001"></button>
+    </div>
+    
+</body>
 
-            var positionFeature = new ol.Feature();
-            positionFeature.setStyle(
-                new ol.style.Style({
-                    image: new ol.style.Circle({
-                    radius: 6,
-                    fill: new ol.style.Fill({
-                        color: '#3399CC',
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#fff',
-                        width: 2,
-                    }),
-                    }),
-                })
-            );
-            geolocation.on('change:position', function () {
-                var coordinates = geolocation.getPosition();
-                console.log(coordinates);
-                positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
-            });
-            var map = new ol.Map({
-                target: 'map',
-                layers: [
-                vector,
-                new ol.layer.Tile({source: new ol.source.OSM({ features: [positionFeature]}),zIndex: 1, className: 'mapp'})
-                ],
-                view: new ol.View({
-                center: [-185163.345142, 6598190.423916],
-                zoom: 15
-                })
-            });
-            var satLayer = new ol.layer.Tile({source: new ol.source.XYZ({url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maxZoom: 19}),zIndex: 2, className: 'sat'});
-            map.addLayer(satLayer);
-            var streetsL = new ol.layer.VectorTile({
-                declutter: true,
-                zIndex: 51,
-                name: 'streetsL',
-                opacity: 0.6,
-                source: new ol.source.VectorTile({
-                    attributions:
-                    '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
-                    '© <a href="https://www.openstreetmap.org/copyright">' +
-                    'OpenStreetMap contributors</a>',
-                    format: new ol.format.MVT(),
-                    url:
-                    'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v8/' +
-                    '{z}/{x}/{y}.vector.pbf?access_token=' +
-                    key,
-                })
-                });
-            map.addLayer(streetsL);
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+    <div id="map" width=window.innerWidth height=window.innerHeight class="map" style="z-index:1"></div>
+    <span id="status"></span>   
+    <script type="text/javascript">
+        var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
+        var source = new ol.source.Vector({wrapX: false});
+        var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
+        var view = new ol.View({
+            center: [0, 0],
+            zoom: 2,
+        });
+        var geolocation = new ol.Geolocation({
+        // enableHighAccuracy must be set to true to have the heading value.
+            trackingOptions: {
+                enableHighAccuracy: true,
+            },
+            projection: view.getProjection(),
+        });
+        function el(id) {
+            return document.getElementById(id);
+        }
+        el('track').addEventListener('change', function () {
+            geolocation.setTracking(this.checked);
+        });
 
-            var terrainL = new ol.layer.VectorTile({
-                declutter: true,
-                zIndex: 51,
-                className: 'terrainL',
-                opacity: 0.3,
-                source: new ol.source.VectorTile({
-                    attributions:
-                    '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
-                    '© <a href="https://www.openstreetmap.org/copyright">' +
-                    'OpenStreetMap contributors</a>',
-                    format: new ol.format.MVT(),
-                    url:
-                    'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2/' +
-                    '{z}/{x}/{y}.vector.pbf?access_token=' +
-                    key,
-                })
-                })
-            map.addLayer(terrainL);
-
-            function vectorLayerListener() {
-            var streetSelect = document.getElementById('streets').checked;
-            var terrainSelect = document.getElementById('terrain').checked;
-
-            if (streetSelect == false) {
-                streetsL.setVisible(false)
-            }
-            if (streetSelect !== false) {
-                streetsL.setVisible(true)
-            }
-            if (terrainSelect == false) {
-                terrainL.setVisible(false)
-            }
-            if (terrainSelect !== false) {
-                terrainL.setVisible(true)
-            }
-            }
-
-            document.getElementById('streets').onchange = function () {
-                vectorLayerListener()
-            }
-            document.getElementById('terrain').onchange = function () {
-                vectorLayerListener()
-            }
-
-            var typeSelect = document.getElementById('type');
-        
-            var draw; // global so we can remove it later
-            function addInteraction() {
-            var typeSelect = document.getElementById('type');
-            var value = typeSelect.value;
-            if (value !== 'None') {
-                draw = new ol.interaction.Draw({
-                source: source,
-                type: typeSelect.value,
-                });
-                map.addInteraction(draw);
-            }
-            }
-
-            /**
-            * Handle change event.
-            */
-            typeSelect.onchange = function () {
-            map.removeInteraction(draw);
-            addInteraction();
-            };
-
-            document.getElementById('undo').addEventListener('click', function () {
-            draw.removeLastPoint();
-            });
-
-            var highlightStyle = new ol.style.Style({
+        var positionFeature = new ol.Feature();
+        positionFeature.setStyle(
+            new ol.style.Style({
+                image: new ol.style.Circle({
+                radius: 6,
                 fill: new ol.style.Fill({
-                    color: 'rgba(255,255,255,0.7)',
+                    color: '#3399CC',
                 }),
                 stroke: new ol.style.Stroke({
-                    color: '#3399CC',
-                    width: 3,
+                    color: '#fff',
+                    width: 2,
                 }),
+                }),
+            })
+        );
+        geolocation.on('change:position', function () {
+            var coordinates = geolocation.getPosition();
+            console.log(coordinates);
+            positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+        });
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+            vector,
+            new ol.layer.Tile({source: new ol.source.OSM({ features: [positionFeature]}),zIndex: 1, className: 'mapp'})
+            ],
+            view: new ol.View({
+            center: [-185163.345142, 6598190.423916],
+            zoom: 15
+            })
+        });
+        var satLayer = new ol.layer.Tile({source: new ol.source.XYZ({url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maxZoom: 19}),zIndex: 2, className: 'sat'});
+        map.addLayer(satLayer);
+        var streetsL = new ol.layer.VectorTile({
+            declutter: true,
+            zIndex: 51,
+            name: 'streetsL',
+            opacity: 0.6,
+            source: new ol.source.VectorTile({
+                attributions:
+                '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
+                '© <a href="https://www.openstreetmap.org/copyright">' +
+                'OpenStreetMap contributors</a>',
+                format: new ol.format.MVT(),
+                url:
+                'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v8/' +
+                '{z}/{x}/{y}.vector.pbf?access_token=' +
+                key,
+            })
             });
+        map.addLayer(streetsL);
 
-            {% comment %} var selected = null;
-            var status = document.getElementById('status');
+        var terrainL = new ol.layer.VectorTile({
+            declutter: true,
+            zIndex: 51,
+            className: 'terrainL',
+            opacity: 0.3,
+            source: new ol.source.VectorTile({
+                attributions:
+                '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
+                '© <a href="https://www.openstreetmap.org/copyright">' +
+                'OpenStreetMap contributors</a>',
+                format: new ol.format.MVT(),
+                url:
+                'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2/' +
+                '{z}/{x}/{y}.vector.pbf?access_token=' +
+                key,
+            })
+            })
+        map.addLayer(terrainL);
 
-            map.on('pointermove', function (e) {
-                if (selected !== null) {
-                    selected.set({style: highlightStyle});
-                    selected = null;
-                }
+        function vectorLayerListener() {
+        var streetSelect = document.getElementById('streets').checked;
+        var terrainSelect = document.getElementById('terrain').checked;
+        if (streetSelect == false) {
+            streetsL.setVisible(false);
+        }
+        if (streetSelect !== false) {
+            streetsL.setVisible(true);
+        }
+        if (terrainSelect == false) {
+            terrainL.setVisible(false);
+        }
+        if (terrainSelect !== false) {
+            terrainL.setVisible(true);
+        }
+        }
 
-                map.forEachFeatureAtPixel(e.pixel, function (f) {
-                    selected = f;
-                    f.set({style: highlightStyle});
-                    return true;
-                }); 
-
-                if (selected) {
-                    status.innerHTML = '&nbsp;Hovering: ' + selected.get('name');
-                } else {
-                    status.innerHTML = '&nbsp;';
-                }
-            });
-             {% endcomment %}
-
-            addInteraction();
+        document.getElementById('streets').onchange = function () {
             vectorLayerListener();
-            
-        </script>
-    <p><table>
-       <tr>
-            <td>
-            <fieldset id="menuMain" style="z-index:999" class="menu">
-                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAss')" class="button">Assign</button>
-                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAnn')" class="button">Annotate</button>
-                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuFeat')" class="button">Features</button>
-                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuSeg')" class="button">Segments</button> 
-                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuProf')" class="button">Profile</button> 
-                <button style="height: 100px; width: 250px;" onclick="change_back()" class="buttonOp">Options</button>   
-            </fieldset>
-            </td>
-            <td>
-            <fieldset id="menuAss" class="menu" style="z-index:5" onload="hideSelf('menuAss')">
-                <h1>Assign</h1>
-                    <select name="Resource" style="height: 100px; width: 400px;" id="Resource" class="dropdown">
-                        <option value="pt">Personnel</option>
-                        <option value="dt">Dog Team</option>
-                        <option value="bt">Bike Team</option>
-                        <option value="uav">UAV</option>
-                        <option value="air">Aircraft</option>
-                    </select> <br><br>
-                    <label for="rName" class="text1">Resource Name:</label>
-                    <input type="text" id="rName" name="rName" class="textForm"><br><br>
-                    <button style="height: 40px; width: 400px;  font-size: 30px;" onclick="change_back()" class="button">Add Resource</button> <br><br>
-                    <ul style="height: 240px; width: 350px; font-size: 30px;" class="textForm">
-                        <li>List1</li>
-                        <li>List2</li>
-                        <li>List3</li>
-                    </ul> 
-                    <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
-            </fieldset>
-            </td>
-            <td>
-            <fieldset id="menuAnn" class="menu" style="z-index:6" onload="hideSelf('menuAnn')">
-                <h1>Annotate</h1>
-                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Pencil</button>
-                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Line</button> 
-                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Rectangle</button> 
-                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Circle</button> 
+        }
+        document.getElementById('terrain').onchange = function () {
+            vectorLayerListener();
+        }
+        function toggleStreets(){
+            if (document.getElementById("streets").checked ==true){
+                document.getElementById("streets").checked =false;
+                document.getElementById("lMenuN").classList.remove("circleMenuOuterActive");
+            } else{
+                document.getElementById("streets").checked =true;
+                document.getElementById("lMenuN").classList.add("circleMenuOuterActive");
+                console.log('yo');
+            }
+            console.log('yo');
+            vectorLayerListener() ;   
+        }
+        function toggleTerrain(){
+            if (document.getElementById("terrain").checked ==true){
+                document.getElementById("terrain").checked =false;
+                document.getElementById("lMenuNE").classList.remove("circleMenuOuterActive");
+            } else{
+                document.getElementById("terrain").checked=true;
+                document.getElementById("lMenuNE").classList.add("circleMenuOuterActive");
+            }
+            console.log('yo');
+            vectorLayerListener() ;  
+        }
 
-                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
-            </fieldset>
-            </td>
-            <td>
-            <fieldset id="menuFeat" class="menu" style="z-index:7" onload="hideSelf('menuFeat')">
-                <h1>Features</h1>
-                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
-            </fieldset>
-            </td>
-            <td>
-            <fieldset id="menuSeg" class="menu" style="z-index:8" onload="hideSelf('menuSeg')">
-                <h1>Segment</h1>
-                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
-            </fieldset>
-            </td>
-            <td>
-            <fieldset id="menuProf" class="menu" style="z-index:9" onload="hideSelf('menuProf')">
-                <h1>Profile</h1>
-                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
-            </fieldset>
-            </td>
-        </tr>
-    </table></p>
-    </fieldset>
-        <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-        {% load static %}
-        <script src="{% static 'js/script.js' %}"></script>
-</body>
+        var typeSelect = document.getElementById('type');
+    
+        var draw; // global so we can remove it later
+        function addInteraction() {
+        var typeSelect = document.getElementById('type');
+        var value = typeSelect.value;
+        if (value !== 'None') {
+            draw = new ol.interaction.Draw({
+            source: source,
+            type: typeSelect.value,
+            });
+            map.addInteraction(draw);
+        }
+        }
+
+        /**
+        * Handle change event.
+        */
+        typeSelect.onchange = function () {
+        map.removeInteraction(draw);
+        addInteraction();
+        };
+
+        document.getElementById('undo').addEventListener('click', function () {
+        draw.removeLastPoint();
+        });
+
+        var highlightStyle = new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255,255,255,0.7)',
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#3399CC',
+                width: 3,
+            }),
+        });
+
+        function hideSat(){
+            satLayer.setVisible(false)
+            var ele = document.getElementById("Sat.");
+            ele.classList.remove("buttonMapSatActive");
+            var ele = document.getElementById("Map.");
+            ele.classList.add("buttonMapSatActive");
+        };
+        function showSat(){
+            satLayer.setVisible(true)
+            var ele = document.getElementById("Sat.");
+            ele.classList.add("buttonMapSatActive");
+            var ele = document.getElementById("Map.");
+            ele.classList.remove("buttonMapSatActive");
+        };
+        hideSat();
+        addInteraction();
+        vectorLayerListener();
+        toggleStreets();
+</script>  
+
+    {% load static %}
+    <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
 {% endblock %}

@@ -1,0 +1,64 @@
+    <p><table>
+       <tr>
+            <td>
+            <fieldset id="menuMain" style="z-index:999" class="menu">
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAss')" class="button">Assign</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuAnn')" class="button">Annotate</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuFeat')" class="button">Features</button>
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuSeg')" class="button">Segments</button> 
+                <button style="height: 100px; width: 250px;" onclick="hideMenu('menuProf')" class="button">Profile</button> 
+                <button style="height: 100px; width: 250px;" onclick="change_back()" class="buttonOp">Options</button>   
+            </fieldset>
+            </td>
+            <td>
+            <fieldset id="menuAss" class="menu" style="z-index:5" onload="hideSelf('menuAss')">
+                <h1>Assign</h1>
+                    <select name="Resource" style="height: 100px; width: 400px;" id="Resource" class="dropdown">
+                        <option value="pt">Personnel</option>
+                        <option value="dt">Dog Team</option>
+                        <option value="bt">Bike Team</option>
+                        <option value="uav">UAV</option>
+                        <option value="air">Aircraft</option>
+                    </select> <br><br>
+                    <label for="rName" class="text1">Resource Name:</label>
+                    <input type="text" id="rName" name="rName" class="textForm"><br><br>
+                    <button style="height: 40px; width: 400px;  font-size: 30px;" onclick="change_back()" class="button">Add Resource</button> <br><br>
+                    <ul style="height: 240px; width: 350px; font-size: 30px;" class="textForm">
+                        <li>List1</li>
+                        <li>List2</li>
+                        <li>List3</li>
+                    </ul> 
+                    <button style="height: 100px; width: 400px;" onclick="showMenu()" class="buttonOp">Back</button>   
+            </fieldset>
+            </td>
+            <td>
+            <fieldset id="menuAnn" class="menu" style="z-index:6" onload="hideSelf('menuAnn')">
+                <h1>Annotate</h1>
+                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Pencil</button>
+                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Line</button> 
+                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Rectangle</button> 
+                <button style="height: 40px; width: 300px;  font-size: 30px;" onclick="change_back()" class="button">Circle</button> 
+
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
+            </fieldset>
+            </td>
+            <td>
+            <fieldset id="menuFeat" class="menu" style="z-index:7" onload="hideSelf('menuFeat')">
+                <h1>Features</h1>
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
+            </fieldset>
+            </td>
+            <td>
+            <fieldset id="menuSeg" class="menu" style="z-index:8" onload="hideSelf('menuSeg')">
+                <h1>Segment</h1>
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
+            </fieldset>
+            </td>
+            <td>
+            <fieldset id="menuProf" class="menu" style="z-index:9" onload="hideSelf('menuProf')">
+                <h1>Profile</h1>
+                <button style="height: 100px; width: 250px;" onclick="showMenu()" class="buttonOp">Back</button>   
+            </fieldset>
+            </td>
+        </tr>
+    </table></p>
