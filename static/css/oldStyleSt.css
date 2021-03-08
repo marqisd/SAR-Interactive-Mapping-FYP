@@ -1,0 +1,50 @@
+.menu{
+    width     : 250px;
+    height: 100%;
+    position  : absolute;
+    left      : 0px;
+    top       : 40px; 
+    background: #00000072;
+    border    : 1px solid #ffa500;
+}
+.menuMinMap{
+    background: #ffffff3d;
+    border    : 1px solid #6666663d;
+    width     : 200px;
+    top       : 90px; 
+    position  : absolute;
+    left      : 75vw;
+}
+.button{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffa500; 
+    color     : #ffffff;
+    width     : 250px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+}
+.button:hover {
+    background-color: #dda500;
+    color: white;
+    }
+
+            
+.buttonOp{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffa500; 
+    color     : #ffffff;
+    width     : 250px;
+    height    : 100px;
+    font-size: 50px;
+    border    : 1px solid #ffa500;
+    box-shadow: rgba(0, 0, 0, .75) 0 2px 6px;
+    position  : absolute;
+    left      : 10px;
+    top       : 800px; 
+}
+.buttonOp:hover {
+    background-color: #dda500;
+    color: white;
+    }
