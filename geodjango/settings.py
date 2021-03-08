@@ -26,7 +26,7 @@ SECRET_KEY = 'ju@)=aib#ghj^gk+#r_0kd&1ju#c6xn+g)q_#0h#75r0mnq$a3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['interactive-sar.herokuapp.com']
+ALLOWED_HOSTS = ['interactive-sar.herokuapp.com','127.0.0.1']
 
 
 # Application definition
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'geodjango.urls'
