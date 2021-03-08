@@ -1,0 +1,1 @@
+web: daphne geodjango.asgi:application
