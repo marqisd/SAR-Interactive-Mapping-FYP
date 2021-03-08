@@ -3,6 +3,9 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 <body onload="onLoad()">    
+    <div onmousedown="onClick(event)" onmousemove="onMouseHover(event)">
+    <div id='toolTipBox' style="z-index:2001;" class="toolTip"></div>
+    <span id="status"></span>
     <button id="Sat." onclick="showSat()" class="buttonMapSat" style="z-index:1998; top:10px;"> Sat.</button>
     <button id="Map."  onclick="hideSat()" class="buttonMapSat" style="z-index:1998; top:70px;"> Map</button>
     <fieldset id="menuMinMap" style="z-index:1998" class="menuMinMap">
@@ -30,7 +33,7 @@
         <button class="circleMenuCenter" id="cMenuMain" onclick="hideMenuMain()" style="z-index:3001">X</button>
         <button class="circleMenuOuter" id="cMenuN" style="z-index:3001">Assign</button>
         <button class="circleMenuOuter" id="cMenuNE"  style="z-index:3001">Features</button>
-        <button class="circleMenuOuter" id="cMenuE"  style="z-index:3001">Segment</button>
+        <button class="circleMenuOuter" id="cMenuE" onclick="openMenuSegment()" style="z-index:3001">Segment</button>
         <button class="circleMenuOuter" id="cMenuSE"  style="z-index:3001">Spare</button>
         <button class="circleMenuOuter" id="cMenuS"  style="z-index:3001">Options</button>
         <button class="circleMenuOuter" id="cMenuSW" onclick="openMenuLayers()" style="z-index:3001" >Layers</button>
@@ -48,6 +51,17 @@
         <button class="circleMenuEmpty" id="lMenuW"  style="z-index:3001"></button>
         <button class="circleMenuEmpty" id="lMenuNW"  style="z-index:3001"></button>
     </div>
+    <div class="menuSegmentSet" id="menuSegmentSet" style="z-index:3001">
+        <button class="circleMenuCenter" id="sMenuMain"  onclick= "segmentMenuBack()" style="z-index:3001; font-size:35px">Back</button>
+        <button class="circleMenuOuter" id="sMenuN"  style="z-index:3001">Auto-Segment</button>
+        <button class="circleMenuOuter" id="sMenuNE" onclick="drawSegment()"  style="z-index:3001">Draw Segment</button>
+        <button class="circleMenuEmpty" id="sMenuE"  style="z-index:3001"></button>
+        <button class="circleMenuOuter" id="sMenuSE"  style="z-index:3001">List</button>
+        <button class="circleMenuOuter" id="sMenuS" onclick= " hideSegmentMenu()"  style="z-index:3001">X</button>
+        <button class="circleMenuEmpty" id="sMenuSW" style="z-index:3001" ></button>
+        <button class="circleMenuEmpty" id="sMenuW"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="sMenuNW"  style="z-index:3001"></button>
+    </div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -56,10 +70,11 @@
     <script type="text/javascript">
         var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
         var source = new ol.source.Vector({wrapX: false});
+        var sourceSeg = new ol.source.Vector({wrapX: false});
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
         var view = new ol.View({
-            center: [0, 0],
-            zoom: 2,
+            center: [-185163.345142, 6598190.423916],
+            zoom: 15
         });
         var geolocation = new ol.Geolocation({
         // enableHighAccuracy must be set to true to have the heading value.
@@ -101,10 +116,7 @@
             vector,
             new ol.layer.Tile({source: new ol.source.OSM({ features: [positionFeature]}),zIndex: 1, className: 'mapp'})
             ],
-            view: new ol.View({
-            center: [-185163.345142, 6598190.423916],
-            zoom: 15
-            })
+            view: view,
         });
         var satLayer = new ol.layer.Tile({source: new ol.source.XYZ({url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maxZoom: 19}),zIndex: 2, className: 'sat'});
         map.addLayer(satLayer);
@@ -112,7 +124,7 @@
             declutter: true,
             zIndex: 51,
             name: 'streetsL',
-            opacity: 0.6,
+            opacity: 1,
             source: new ol.source.VectorTile({
                 attributions:
                 '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
@@ -185,8 +197,8 @@
             vectorLayerListener() ;  
         }
 
+        //////////////// sample draw code
         var typeSelect = document.getElementById('type');
-    
         var draw; // global so we can remove it later
         function addInteraction() {
         var typeSelect = document.getElementById('type');
@@ -211,16 +223,101 @@
         document.getElementById('undo').addEventListener('click', function () {
         draw.removeLastPoint();
         });
-
-        var highlightStyle = new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: 'rgba(255,255,255,0.7)',
-            }),
+        //////////////// sample draw code
+        var segStyle = new ol.style.Style({    
             stroke: new ol.style.Stroke({
-                color: '#3399CC',
-                width: 3,
+            color: 'red',
+            width: 2,
             }),
-        });
+            fill: new ol.style.Fill({
+            color: 'rgba(100,100, 100, 0.1)',
+            }),
+        })
+        var segStyleHover = new ol.style.Style({    
+            stroke: new ol.style.Stroke({
+            color: 'red',
+            width: 4,
+            }),
+            fill: new ol.style.Fill({
+            color: 'rgba(255,100, 100, 0.3)',
+            }),
+        })
+        var segLayer = new ol.layer.Vector({source: sourceSeg,style: segStyle,zIndex: 200});
+        map.addLayer(segLayer);
+        var segColl = new ol.Collection();
+        //var snapNet = new ol.Collection();
+        var seg;
+        var point;
+        function drawSegment(){
+            map.removeInteraction(seg);
+            seg = new ol.interaction.Draw({
+                type: 'Polygon',
+                source: sourceSeg,
+                features: segColl,
+            });
+            map.addInteraction(seg);
+           // point = new ol.interaction.Draw({
+          //      type: 'Multipoint',
+          //      source: source,
+           //     features: snapNet,
+          //  });
+           // map.addInteraction(point);
+        }
+        var selected = null;
+        var status = document.getElementById('status');
+        var highlightLayers = [segLayer];
+        var tipBox = document.getElementById('toolTipBox');
+        var hovering= false;
+
+        function checkFeat (feat,hoverArray){
+            if(hoverArray.includes(feat)){
+                feat.setStyle(segStyleHover);
+                var polygon = feat.getGeometry();
+                var ext = polygon.getExtent();
+                var coords = ol.proj.toLonLat(ol.extent.getCenter(ext));
+                tipBox.style.display = 'block';
+                tipBox.innerHTML = coords ;
+                hovering = true;
+            } else{
+                feat.setStyle(segStyle); 
+            }  
+        };
+        
+        function checkFeatFocus (feat,hoverArray){
+            if(hoverArray.includes(feat)){
+                var polygon = feat.getGeometry();
+                var size = map.getSize();
+                var ext = polygon.getExtent();
+                var coords = ol.extent.getCenter(ext);
+                console.log(coords);
+                console.log(size);
+                view.setCenter(coords);
+                view.fit(ext, {size: size, padding: [100, 100, 100, 100],});
+            }
+        };
+        //,layerFilter = (layerName => checkLayer(layerName))
+        function onMouseHover(e){
+            hovering = false;
+            tipBox.innerHTML= '';
+            var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
+            //console.log(hoverArray);
+            var segArray = segColl.getArray();
+            segArray.forEach(feature => checkFeat(feature,hoverArray));
+            tipBox.style.left= e.clientX ;
+            tipBox.style.top= e.clientY;
+            if (hovering==false){tipBox.style.display = 'none'};
+        };
+        function onClick(e) {
+            console.log(view.getCenter());
+            if (e.button==2){
+                map.removeInteraction(seg);
+            }else if(e.button==0){
+                
+                var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
+                var segArray = segColl.getArray();
+                segArray.forEach(feature => checkFeatFocus(feature,hoverArray));
+            }
+        };
 
         function hideSat(){
             satLayer.setVisible(false)

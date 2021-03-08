@@ -234,3 +234,13 @@
     position  : absolute;
     left      : 75vw;
 }
+.toolTip{
+    background: #ffffff; 
+    border    : 1px solid #000000;
+    height   : 20px;
+    display:  none;
+    top       : 90vw; 
+    border-radius: 5px;
+    position  : absolute;
+    left      : 75vw;
+}
