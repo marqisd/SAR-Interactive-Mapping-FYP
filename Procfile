@@ -1,1 +1,1 @@
-web: daphne geodjango.asgi:application
+web: gunicorn geodjango.wsgi
