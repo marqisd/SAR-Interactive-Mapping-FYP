@@ -26,7 +26,7 @@ SECRET_KEY = 'ju@)=aib#ghj^gk+#r_0kd&1ju#c6xn+g)q_#0h#75r0mnq$a3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['interactive-sar.herokuapp.com']
 
 
 # Application definition
