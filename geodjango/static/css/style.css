@@ -237,10 +237,43 @@
 .toolTip{
     background: #ffffff; 
     border    : 1px solid #000000;
-    height   : 20px;
+
     display:  none;
     top       : 90vw; 
     border-radius: 5px;
     position  : absolute;
     left      : 75vw;
+}
+.segmentEditMenu{
+    left: 50vw;
+    top: 50vh;
+    height: 160px;
+    width: 190px;
+    position: absolute;
+    background: #ffffff99;
+    border    : 3px solid #ffa500;
+    font-size: 15px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    border-radius: 20px; 
+    text-align: center;
+    display:  none;
+}
+
+.colorSelectRed{
+    height: 30px;
+    width: 30px;
+    border    : 2px solid #aaaaaa;
+    background: #ff0000;
+}
+.colorSelectYellow{
+    height: 30px;
+    width: 30px;
+    border    : 2px solid #aaaaaa;
+    background: #ffee00;
+}
+.colorSelectGreen{
+    height: 30px;
+    width: 30px;
+    border    : 2px solid #aaaaaa;
+    background: #00ff15;
 }
