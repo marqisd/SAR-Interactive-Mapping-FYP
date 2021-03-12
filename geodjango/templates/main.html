@@ -32,7 +32,7 @@
     <div class="menuMainSet" id="menuMainSet" style="z-index:3001">
         <button class="circleMenuCenter" id="cMenuMain" onclick="hideMenuMain()" style="z-index:3001">X</button>
         <button class="circleMenuOuter" id="cMenuN" style="z-index:3001">Assign</button>
-        <button class="circleMenuOuter" id="cMenuNE"  style="z-index:3001">Features</button>
+        <button class="circleMenuOuter" id="cMenuNE"  onclick="openMenuFeature()"style="z-index:3001">Features</button>
         <button class="circleMenuOuter" id="cMenuE" onclick="openMenuSegment()" style="z-index:3001">Segment</button>
         <button class="circleMenuOuter" id="cMenuSE"  style="z-index:3001">Spare</button>
         <button class="circleMenuOuter" id="cMenuS"  style="z-index:3001">Options</button>
@@ -53,14 +53,35 @@
     </div>
     <div class="menuSegmentSet" id="menuSegmentSet" style="z-index:3001">
         <button class="circleMenuCenter" id="sMenuMain"  onclick= "segmentMenuBack()" style="z-index:3001; font-size:35px">Back</button>
-        <button class="circleMenuOuter" id="sMenuN"  style="z-index:3001">Auto-Segment</button>
-        <button class="circleMenuOuter" id="sMenuNE" onclick="drawSegment()"  style="z-index:3001">Draw Segment</button>
-        <button class="circleMenuEmpty" id="sMenuE"  style="z-index:3001"></button>
-        <button class="circleMenuOuter" id="sMenuSE"  style="z-index:3001">List</button>
+        <button class="circleMenuOuter" id="sMenuNW"  style="z-index:3001">Auto-Segment</button>
+        <button class="circleMenuOuter" id="sMenuN" onclick="drawSegment()"  style="z-index:3001">Draw Segment</button>
+        <button class="circleMenuOuter" id="sMenuNE" onclick="editSegment()" style="z-index:3001">Edit Segment</button>
+        <button class="circleMenuEmpty" id="sMenuSE"  style="z-index:3001"></button>
         <button class="circleMenuOuter" id="sMenuS" onclick= " hideSegmentMenu()"  style="z-index:3001">X</button>
         <button class="circleMenuEmpty" id="sMenuSW" style="z-index:3001" ></button>
         <button class="circleMenuEmpty" id="sMenuW"  style="z-index:3001"></button>
-        <button class="circleMenuEmpty" id="sMenuNW"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="sMenuE"  style="z-index:3001"></button>
+    </div>
+    <div class="menuFeatureSet" id="menuFeatureSet" style="z-index:3001">
+        <button class="circleMenuCenter" id="fMenuMain"  onclick= "featureMenuBack()" style="z-index:3001; font-size:35px">Back</button>
+        <button class="circleMenuOuter" id="fMenuN" onclick="addMarker()" style="z-index:3001">Place Feature</button>
+        <button class="circleMenuEmpty" id="fMenuNE"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="fMenuE"style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="fMenuSE"  style="z-index:3001"></button>
+        <button class="circleMenuOuter" id="fMenuS" onclick= " hideFeatureMenu()"  style="z-index:3001">X</button>
+        <button class="circleMenuEmpty" id="fMenuSW" style="z-index:3001" ></button>
+        <button class="circleMenuEmpty" id="fMenuW"  style="z-index:3001"></button>
+        <button class="circleMenuEmpty" id="fMenuNW"  style="z-index:3001"></button>
+    </div>
+    <div class= "segmentEditMenu" id= "segmentEditMenu" style="z-index:3002">
+        <label for="segName">Segment Name</label>
+        <input type="text" id="segName" name="segName"><br><br>
+        <button id="redSel"class="colorSelectRed" onclick="updateSegCol('red')"></button> 
+        <button id="yellowSel" class="colorSelectYellow" onclick="updateSegCol('yellow')"></button> 
+        <button id="greenSel" class="colorSelectGreen" onclick="updateSegCol('green')"></button> <br><br>
+        <button id="modify" onclick="editSegment()">modify</button> 
+        <button id="delete" onclick="deleteSeg()">delete</button> <br><br>
+        <button id="close" onclick= "hideSegmentEditMenu()">close</button>
     </div>
 </body>
 
@@ -68,9 +89,12 @@
     <div id="map" width=window.innerWidth height=window.innerHeight class="map" style="z-index:1"></div>
     <span id="status"></span>   
     <script type="text/javascript">
+        var mouseState = 0;
+        // mouse states: 0 - default 1 - drawing 2 - gemoetry edit 3 - marker maker
         var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
         var source = new ol.source.Vector({wrapX: false});
         var sourceSeg = new ol.source.Vector({wrapX: false});
+        var sourceMarker = new ol.source.Vector({wrapX: false});
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
         var view = new ol.View({
             center: [-185163.345142, 6598190.423916],
@@ -209,8 +233,8 @@
             type: typeSelect.value,
             });
             map.addInteraction(draw);
-        }
-        }
+        };
+        };
 
         /**
         * Handle change event.
@@ -223,7 +247,21 @@
         document.getElementById('undo').addEventListener('click', function () {
         draw.removeLastPoint();
         });
-        //////////////// sample draw code
+/////////////////////////////////////////styles///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+        var markerStyle = new ol.style.Style({    
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                color: 'rgba(255,50, 255, 1)',
+                }),
+            }),
+            stroke: new ol.style.Stroke({
+            color: 'blue',
+            width: 2,
+            }),
+        });
+
         var segStyle = new ol.style.Style({    
             stroke: new ol.style.Stroke({
             color: 'red',
@@ -232,7 +270,7 @@
             fill: new ol.style.Fill({
             color: 'rgba(100,100, 100, 0.1)',
             }),
-        })
+        });
         var segStyleHover = new ol.style.Style({    
             stroke: new ol.style.Stroke({
             color: 'red',
@@ -241,28 +279,115 @@
             fill: new ol.style.Fill({
             color: 'rgba(255,100, 100, 0.3)',
             }),
-        })
+        });
+
+        var segStyleYellow = new ol.style.Style({    
+            stroke: new ol.style.Stroke({
+            color: 'yellow',
+            width: 2,
+            }),
+            fill: new ol.style.Fill({
+            color: 'rgba(100,100, 100, 0.1)',
+            }),
+        });
+        var segStyleYellowHover = new ol.style.Style({    
+            stroke: new ol.style.Stroke({
+            color: 'yellow',
+            width: 4,
+            }),
+            fill: new ol.style.Fill({
+            color: 'rgba(255,100, 100, 0.3)',
+            }),
+        });
+
+        var segStyleGreen = new ol.style.Style({    
+            stroke: new ol.style.Stroke({
+            color: 'green',
+            width: 2,
+            }),
+            fill: new ol.style.Fill({
+            color: 'rgba(100,100, 100, 0.1)',
+            }),
+        });
+        var segStyleGreenHover = new ol.style.Style({    
+            stroke: new ol.style.Stroke({
+            color: 'green',
+            width: 4,
+            }),
+            fill: new ol.style.Fill({
+            color: 'rgba(255,100, 100, 0.3)',
+            }),
+        });
+/////////////////////////////////////////styles///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
         var segLayer = new ol.layer.Vector({source: sourceSeg,style: segStyle,zIndex: 200});
         map.addLayer(segLayer);
+        var markerLayer = new ol.layer.Vector({source: sourceMarker,style: markerStyle,zIndex: 201});
+        map.addLayer(markerLayer);
+
         var segColl = new ol.Collection();
-        //var snapNet = new ol.Collection();
+        var markerColl = new ol.Collection();
+
+        var snap = new ol.interaction.Snap({
+            source: sourceSeg,
+        });
+
         var seg;
+        var marker;
         var point;
+        var modify;
+
         function drawSegment(){
-            map.removeInteraction(seg);
+            removeInteractions();
+            mouseState = 1;
             seg = new ol.interaction.Draw({
                 type: 'Polygon',
                 source: sourceSeg,
                 features: segColl,
             });
             map.addInteraction(seg);
-           // point = new ol.interaction.Draw({
-          //      type: 'Multipoint',
-          //      source: source,
-           //     features: snapNet,
-          //  });
-           // map.addInteraction(point);
-        }
+            map.addInteraction(snap);
+        };
+
+        function addMarker(){
+            removeInteractions();
+            mouseState = 3;
+            marker = new ol.interaction.Draw({
+                type: 'Point',
+                source: sourceMarker,
+                features: markerColl,
+            });
+            map.addInteraction(marker);
+        };
+        function editSegment(){
+            removeInteractions ();
+            mouseState = 2;
+            modify = new ol.interaction.Modify({
+                 features: segColl,
+                 source: sourceSeg,
+                 //hitDetection: true,
+            });
+            map.addInteraction(modify);
+            //map.addInteraction(snap); 
+        };
+        function removeInteractions (){
+            map.removeInteraction(seg);    
+            map.removeInteraction(snap); 
+            map.removeInteraction(modify);
+            map.removeInteraction(marker);
+            var glist = segColl.getArray();
+
+            for (i = 0; i < glist.length; i++) {
+                //console.log(glist[i].getId);
+                if ((typeof glist[i].getId() != "string") && (typeof glist[i].getId() != "number")){
+                    console.log('detget')
+                    glist[i].setId(i);
+                    glist[i].setStyle(segStyle);
+                };
+            };
+            mouseState=0;
+        };
         var selected = null;
         var status = document.getElementById('status');
         var highlightLayers = [segLayer];
@@ -270,53 +395,120 @@
         var hovering= false;
 
         function checkFeat (feat,hoverArray){
-            if(hoverArray.includes(feat)){
-                feat.setStyle(segStyleHover);
+            if(hoverArray.includes(feat) && mouseState == 0){
+                if (feat.getStyle()==segStyle || feat.getStyle()==segStyleHover ){
+                    feat.setStyle(segStyleHover ); 
+                }else if (feat.getStyle()==segStyleYellow || feat.getStyle()==segStyleYellowHover){
+                    feat.setStyle(segStyleYellowHover ); 
+                }else if (feat.getStyle()==segStyleGreen || feat.getStyle()==segStyleGreenHover){
+                    feat.setStyle(segStyleGreenHover ); 
+                };
                 var polygon = feat.getGeometry();
                 var ext = polygon.getExtent();
                 var coords = ol.proj.toLonLat(ol.extent.getCenter(ext));
                 tipBox.style.display = 'block';
-                tipBox.innerHTML = coords ;
+                tipBox.innerHTML = feat.getId() + "<br />" + coords ;
                 hovering = true;
             } else{
-                feat.setStyle(segStyle); 
-            }  
+                if (feat.getStyle()==segStyle || feat.getStyle()==segStyleHover ){
+                    feat.setStyle(segStyle); 
+                }else if (feat.getStyle()==segStyleYellow || feat.getStyle()==segStyleYellowHover){
+                    feat.setStyle(segStyleYellow); 
+                }else if (feat.getStyle()==segStyleGreen || feat.getStyle()==segStyleGreenHover){
+                    feat.setStyle(segStyleGreen); 
+                };
+            }; 
         };
-        
+        function checkMarker (feat,hoverArray){
+            if(hoverArray.includes(feat) && mouseState == 0){
+                console.log(feat);
+                var point = feat.getGeometry();
+                var coords = point.getCoordinates();
+                tipBox.style.display = 'block';
+                tipBox.innerHTML =  coords ;
+                hovering = true;
+            };
+        };
         function checkFeatFocus (feat,hoverArray){
             if(hoverArray.includes(feat)){
                 var polygon = feat.getGeometry();
                 var size = map.getSize();
                 var ext = polygon.getExtent();
                 var coords = ol.extent.getCenter(ext);
-                console.log(coords);
-                console.log(size);
+               // console.log(coords);
+                //console.log(size);
                 view.setCenter(coords);
                 view.fit(ext, {size: size, padding: [100, 100, 100, 100],});
+                //console.log(feat);
+                //console.log(feat.getId());
+                currentSegmentID = feat.getId();
+                showSegmentEditMenu();
             }
         };
         //,layerFilter = (layerName => checkLayer(layerName))
         function onMouseHover(e){
-            hovering = false;
-            tipBox.innerHTML= '';
-            var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
-            //console.log(hoverArray);
-            var segArray = segColl.getArray();
-            segArray.forEach(feature => checkFeat(feature,hoverArray));
-            tipBox.style.left= e.clientX ;
-            tipBox.style.top= e.clientY;
-            if (hovering==false){tipBox.style.display = 'none'};
+            if (mouseState == 0){
+                hovering = false;
+                tipBox.innerHTML= '';
+                var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
+                //console.log(hoverArray);
+                var segArray = segColl.getArray();
+                segArray.forEach(feature => checkFeat(feature,hoverArray));
+                var markerArray = markerColl.getArray();
+                markerArray.forEach(feature => checkMarker(feature,hoverArray));
+                tipBox.style.left= e.clientX ;
+                tipBox.style.top= e.clientY - 40;
+                if (hovering==false){tipBox.style.display = 'none'};
+            };
         };
         function onClick(e) {
-            console.log(view.getCenter());
+            //console.log(view.getCenter());
             if (e.button==2){
-                map.removeInteraction(seg);
-            }else if(e.button==0){
-                
+                mouseState = 0 ;
+                removeInteractions();
+            }else if(e.button==0  && mouseState == 0){
+                removeInteractions();
                 var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
                 var segArray = segColl.getArray();
                 segArray.forEach(feature => checkFeatFocus(feature,hoverArray));
             }
+        };
+
+        //sourceSeg.on(ol.events.condition.click,console.log('event test'));
+
+        document.getElementById("segName").addEventListener('change',updateSegName);
+
+        function updateSegName(){
+            console.log("listener test");
+            var newValue = document.getElementById("segName").value;
+            console.log(newValue);
+            var segArray = segColl.getArray();
+            getFeatfromID(currentSegmentID);
+            currentFeat.setId(newValue);
+        };
+
+        function deleteSeg(){
+            getFeatfromID(currentSegmentID);
+            sourceSeg.removeFeature(currentFeat);
+        }
+
+        function getFeatfromID(ID){
+            var segArray = segColl.getArray();
+            segArray.forEach(feature => getFeathelper(feature));
+        };
+        function getFeathelper(feature){
+            if(feature.getId()==currentSegmentID){currentFeat = feature};
+        };
+
+        function updateSegCol(newColour){
+            getFeatfromID(currentSegmentID);
+            if (newColour == "red"){
+                currentFeat.setStyle(segStyle);
+            }else if (newColour == "yellow"){
+                currentFeat.setStyle(segStyleYellow);
+            }else if (newColour == "green"){
+                currentFeat.setStyle(segStyleGreen);
+            };
         };
 
         function hideSat(){
@@ -342,5 +534,5 @@
     {% load static %}
     <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'static/js/script.js' %}"></script>
+
 {% endblock %}
