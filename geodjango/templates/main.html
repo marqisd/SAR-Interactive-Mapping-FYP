@@ -100,13 +100,10 @@
         </select> <br><br>
         <button id="delete" onclick="deleteMarker()">delete</button> <br><br>
         <button id="close" onclick= "hideMarkerEditMenu()">close</button>
-    </div>
-<<<<<<< Updated upstream
+    </div>        
     <label for="trackerID">TrackerID</label>
     <input type="text" id="trackerID" name="trackerID"><br><br>
-    <input type="submit" value="Submit">Show Tracking</input>  
-=======
->>>>>>> Stashed changes
+    <input type="Button" id="trackerButton" onclick = "track()" name="trackerButton" value="Show Track"></input> 
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -119,6 +116,7 @@
         var source = new ol.source.Vector({wrapX: false});
         var sourceSeg = new ol.source.Vector({wrapX: false});
         var sourceMarker = new ol.source.Vector({wrapX: false});
+
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
         var view = new ol.View({
             center: ol.proj.fromLonLat([-0.2704562,51.504194999999996]),
@@ -349,7 +347,6 @@
         map.addLayer(segLayer);
         var markerLayer = new ol.layer.Vector({source: sourceMarker,style: markerStyle,zIndex: 201});
         map.addLayer(markerLayer);
-
         var segColl = new ol.Collection();
         var markerColl = new ol.Collection();
 
@@ -588,14 +585,50 @@
             var ele = document.getElementById("Map.");
             ele.classList.remove("buttonMapSatActive");
         };
+
+        var names = [];
+        var lats = [];
+        var lons = [];
+        function buildTrackSet(){
+            names = [];
+            lats = [];
+            lons = [];
+            {% for point in trackPoints %}
+                names.push("{{point.name}}");
+                lats.push("{{point.Lat}}");
+                lons.push("{{point.Lon}}");
+            {% endfor %}
+            for (i = 0; i < names.length; i++) {
+                //temp = new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]]));([lons[i],lats[i]])), 
+               //temp.setId(i);
+                //temp = new ol.geom.Point(ol.proj.fromLonLat
+                //trackerColl.push(temp);
+            }; 
+        };
         hideSat();
         addInteraction();
         vectorLayerListener();
         toggleStreets();
+        buildTrackSet();
 
+        function track(){
+            var targetName = document.getElementById('trackerID').value;
+            for (i = 0; i < names.length; i++) {
+                if (names[i]==targetName){
+                    console.log('longitude')
+                    console.log(lons[i])
+                    console.log('latitude')
+                    console.log(lats[i])
+                    var temp = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([-0.2704562,51.504194999999996])),
+                    );
+                };
+            }; 
+            
+                
+        };
         // grid segArray.forEach
         // leave notes about features
-        // home button
+        // home buttond
 </script>  
 
     {% load static %}

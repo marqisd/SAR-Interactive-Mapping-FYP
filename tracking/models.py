@@ -2,7 +2,7 @@ from django.db import models
 
 
 class trackingPoint(models.Model):
-    #ID = models.CharField(max_length=500)
+    name = models.CharField(max_length=500, default='hello')
     Lat = models.CharField(max_length=500)
     Lon = models.CharField(max_length=500)
 
