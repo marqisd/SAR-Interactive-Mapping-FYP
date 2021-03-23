@@ -22,5 +22,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('mapdemo/',views.mapdemo),
-    path('',views.main)
+    path('main/',views.main),
+    path('tracking/',include('tracking.urls')),
+    path('',views.landing)
 ]

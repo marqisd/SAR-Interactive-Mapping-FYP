@@ -2,6 +2,7 @@ var x ;
 var y;
 var currentSegmentID;
 var currentFeat;
+var currentMarkerID;
 
 var menuMainSet = ["cMenuMain","cMenuN","cMenuNE","cMenuE","cMenuSE","cMenuS","cMenuSW","cMenuW","cMenuNW"];
 var menuLayerSet = ["lMenuMain","lMenuN","lMenuNE","lMenuE","lMenuSE","lMenuS","lMenuSW","lMenuW","lMenuNW"];
@@ -58,34 +59,41 @@ function showMenuMain(){
 }
 function hideLayerMenu(){
     document.getElementById("menuLayerSet").style.display="none";
-}
+};
 function hideSegmentMenu(){
     document.getElementById("menuSegmentSet").style.display="none";
-}
+};
 function hideFeatureMenu(){
     document.getElementById("menuFeatureSet").style.display="none";
-}
+};
+function hideSegmentEditMenu(){
+    document.getElementById("segmentEditMenu").style.display="none";
+};
+function hideMarkerEditMenu(){
+    document.getElementById("markerEditMenu").style.display="none";
+};
 function showSegmentEditMenu(){
     hideSegmentEditMenu();
     document.getElementById("segmentEditMenu").style.display="block";
     document.getElementById("segName").value = currentSegmentID;
-}
+};
+function showMarkerEditMenu(){
+    document.getElementById("markerEditMenu").style.display="block";
+    document.getElementById("markerName").value = currentMarkerID;
+};
 
-function hideSegmentEditMenu(){
-    document.getElementById("segmentEditMenu").style.display="none";
-}
 function layerMenuBack(){
     document.getElementById("menuLayerSet").style.display="none";
     openMenuMain()
-}
+};
 function segmentMenuBack(){
     document.getElementById("menuSegmentSet").style.display="none";
     openMenuMain()
-}
+};
 function featureMenuBack(){
     document.getElementById("menuFeatureSet").style.display="none";
     openMenuMain()
-}
+};
 function onLoad() {
     // var ele = document.getElementById("menuMainSet");
     // ele.classList.add("shrink");
@@ -93,8 +101,9 @@ function onLoad() {
     hideSegmentMenu();
     hideMenuMain(); 
     hideFeatureMenu(); 
+    hideMarkerEditMenu();
     document.getElementById("menuMinMap").style.display="none" ;   
-}
+};
 
 
 // function hideMenu(iD) {
