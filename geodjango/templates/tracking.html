@@ -1,0 +1,32 @@
+
+  <head>
+    <meta charset="utf-8">
+    <title>Tracking</title>
+  </head>
+
+{% block content %}
+<body>
+  <form id="createTaskForm" method="post">
+    {% csrf_token %}
+    <input type="text" id="ID" name="ID"></input><br><br>    
+    <input type="text" id="Lat" name="Lat"></input><br><br> 
+    <input type="text" id="Lon" name="Lon"></input>  
+    <button type ="button" id="ajax" class="ajax">Test Ajax</button>
+  </form>
+</body>
+{% endblock %}
+
+
+  {% comment %} <body>
+    <p>Hello World</p>
+    <label for="ID">Tracking ID</label>
+    {% csrf_token %}
+
+
+    <button onclick="getLocation()">Start Tracking</button>
+ 
+  </body> {% endcomment %}
+
+  {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/trackingHelper.js' %}"></script>

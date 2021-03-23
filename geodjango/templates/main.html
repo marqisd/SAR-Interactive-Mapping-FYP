@@ -83,6 +83,27 @@
         <button id="delete" onclick="deleteSeg()">delete</button> <br><br>
         <button id="close" onclick= "hideSegmentEditMenu()">close</button>
     </div>
+    <div class= "segmentEditMenu" id= "markerEditMenu" style="z-index:3002">
+        <label for="markerName">Feature Name</label>
+        <input type="text" id="markerName" name="markerName"><br><br>
+        <select name="Resource" id="Resource">
+            <option value="structure">Structure</option>
+            <option value="road">Road</option>
+            <option value="linear">Linear Feature</option>
+            <option value="drain">Drainage</option>
+            <option value="water">Water</option>
+            <option value="brush">Brush</option>
+            <option value="scrub">Scrub</option>
+            <option value="woods">Woods</option>
+            <option value="field">Field</option>
+            <option value="rock">Rock</option>
+        </select> <br><br>
+        <button id="delete" onclick="deleteMarker()">delete</button> <br><br>
+        <button id="close" onclick= "hideMarkerEditMenu()">close</button>
+    </div>
+    <label for="trackerID">TrackerID</label>
+    <input type="text" id="trackerID" name="trackerID"><br><br>
+    <input type="submit" value="Submit">Show Tracking</input>  
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -97,7 +118,7 @@
         var sourceMarker = new ol.source.Vector({wrapX: false});
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
         var view = new ol.View({
-            center: [-185163.345142, 6598190.423916],
+            center: ol.proj.fromLonLat([-0.2704562,51.504194999999996]),
             zoom: 15
         });
         var geolocation = new ol.Geolocation({
@@ -233,7 +254,7 @@
             type: typeSelect.value,
             });
             map.addInteraction(draw);
-        };
+            };
         };
 
         /**
@@ -376,14 +397,22 @@
             map.removeInteraction(snap); 
             map.removeInteraction(modify);
             map.removeInteraction(marker);
-            var glist = segColl.getArray();
 
+            var glist = segColl.getArray();
             for (i = 0; i < glist.length; i++) {
                 //console.log(glist[i].getId);
                 if ((typeof glist[i].getId() != "string") && (typeof glist[i].getId() != "number")){
                     console.log('detget')
                     glist[i].setId(i);
                     glist[i].setStyle(segStyle);
+                };
+            };
+            glist = markerColl.getArray();
+            for (i = 0; i < glist.length; i++) {
+                //console.log(glist[i].getId);
+                if ((typeof glist[i].getId() != "string") && (typeof glist[i].getId() != "number")){
+                    console.log('detget')
+                    glist[i].setId(i);
                 };
             };
             mouseState=0;
@@ -421,11 +450,10 @@
         };
         function checkMarker (feat,hoverArray){
             if(hoverArray.includes(feat) && mouseState == 0){
-                console.log(feat);
                 var point = feat.getGeometry();
                 var coords = point.getCoordinates();
                 tipBox.style.display = 'block';
-                tipBox.innerHTML =  coords ;
+                tipBox.innerHTML =  feat.getId() + "<br />" + coords ;
                 hovering = true;
             };
         };
@@ -443,7 +471,13 @@
                 //console.log(feat.getId());
                 currentSegmentID = feat.getId();
                 showSegmentEditMenu();
-            }
+            };
+        };
+        function checkMarkerClick (feat,hoverArray){
+            if(hoverArray.includes(feat)){
+                currentMarkerID = feat.getId();
+                showMarkerEditMenu();
+            };
         };
         //,layerFilter = (layerName => checkLayer(layerName))
         function onMouseHover(e){
@@ -469,9 +503,13 @@
             }else if(e.button==0  && mouseState == 0){
                 removeInteractions();
                 var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
-                var segArray = segColl.getArray();
-                segArray.forEach(feature => checkFeatFocus(feature,hoverArray));
-            }
+                var markerArray = markerColl.getArray();
+                markerArray.forEach(feature => checkMarkerClick(feature,hoverArray));
+                if (document.getElementById("markerEditMenu").style.display=="none"){
+                    var segArray = segColl.getArray();
+                    segArray.forEach(feature => checkFeatFocus(feature,hoverArray));
+                };
+            };
         };
 
         //sourceSeg.on(ol.events.condition.click,console.log('event test'));
@@ -482,24 +520,46 @@
             console.log("listener test");
             var newValue = document.getElementById("segName").value;
             console.log(newValue);
-            var segArray = segColl.getArray();
             getFeatfromID(currentSegmentID);
+            currentFeat.setId(newValue);
+        };
+
+        document.getElementById("markerName").addEventListener('change',updateMarkerName);
+
+        function updateMarkerName(){
+            console.log("listener test");
+            var newValue = document.getElementById("markerName").value;
+            console.log(newValue);
+            getMarkerfromID(currentMarkerID);
             currentFeat.setId(newValue);
         };
 
         function deleteSeg(){
             getFeatfromID(currentSegmentID);
             sourceSeg.removeFeature(currentFeat);
-        }
+            hideSegmentEditMenu();
+        };
+        function deleteMarker(){
+            getMarkerfromID(currentMarkerID);
+            sourceMarker.removeFeature(currentFeat);
+            hideMarkerEditMenu();
+        };
 
         function getFeatfromID(ID){
             var segArray = segColl.getArray();
             segArray.forEach(feature => getFeathelper(feature));
         };
+
+        function getMarkerfromID(ID){
+            var markerArray = markerColl.getArray();
+            markerArray.forEach(feature => getMarkerhelper(feature));
+        };
         function getFeathelper(feature){
             if(feature.getId()==currentSegmentID){currentFeat = feature};
         };
-
+        function getMarkerhelper(feature){
+            if(feature.getId()==currentMarkerID){currentFeat = feature};
+        };
         function updateSegCol(newColour){
             getFeatfromID(currentSegmentID);
             if (newColour == "red"){
@@ -529,10 +589,14 @@
         addInteraction();
         vectorLayerListener();
         toggleStreets();
+
+        // grid segArray.forEach
+        // leave notes about features
+        // home button
 </script>  
 
     {% load static %}
     <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
-
 {% endblock %}
+
