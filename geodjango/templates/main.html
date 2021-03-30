@@ -101,9 +101,9 @@
         <button id="delete" onclick="deleteMarker()">delete</button> <br><br>
         <button id="close" onclick= "hideMarkerEditMenu()">close</button>
     </div>        
-    <label for="trackerID">TrackerID</label>
+    {% comment %} <label for="trackerID">TrackerID</label>
     <input type="text" id="trackerID" name="trackerID"><br><br>
-    <input type="Button" id="trackerButton" onclick = "track()" name="trackerButton" value="Show Track"></input> 
+    <input type="Button" id="trackerButton" onclick = "track()" name="trackerButton" value="Show Track"></input>  {% endcomment %}
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -114,8 +114,6 @@
         // mouse states: 0 - default 1 - drawing 2 - gemoetry edit 3 - marker maker
         var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
         var source = new ol.source.Vector({wrapX: false});
-        var sourceSeg = new ol.source.Vector({wrapX: false});
-        var sourceMarker = new ol.source.Vector({wrapX: false});
 
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
         var view = new ol.View({
@@ -269,6 +267,7 @@
         document.getElementById('undo').addEventListener('click', function () {
         draw.removeLastPoint();
         });
+
 /////////////////////////////////////////styles///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
         var markerStyle = new ol.style.Style({    
@@ -340,15 +339,30 @@
             color: 'rgba(255,100, 100, 0.3)',
             }),
         });
+
+        var hideStyle =  new ol.style.Style({    
+        
+        });
 /////////////////////////////////////////styles///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        var sourceSeg = new ol.source.Vector({wrapX: false});
+        var sourceMarker = new ol.source.Vector({wrapX: false});
+        var sourceTracking = new ol.source.Vector({wrapX: false});
+        var sourceTrackingLines = new ol.source.Vector({wrapX: false});
 
         var segLayer = new ol.layer.Vector({source: sourceSeg,style: segStyle,zIndex: 200});
         map.addLayer(segLayer);
         var markerLayer = new ol.layer.Vector({source: sourceMarker,style: markerStyle,zIndex: 201});
         map.addLayer(markerLayer);
+        var trackingLayer = new ol.layer.Vector({source: sourceTracking,style: segStyle,zIndex: 200});
+        map.addLayer(trackingLayer);
+        var trackingLayer2 = new ol.layer.Vector({source: sourceTrackingLines,style: segStyle,zIndex: 201});
+        map.addLayer(trackingLayer2);
+
         var segColl = new ol.Collection();
         var markerColl = new ol.Collection();
+        var trackingColl = new ol.Collection();
 
         var snap = new ol.interaction.Snap({
             source: sourceSeg,
@@ -589,43 +603,68 @@
         var names = [];
         var lats = [];
         var lons = [];
+        var lines = [];
         function buildTrackSet(){
             names = [];
             lats = [];
             lons = [];
+            lines = [];
             {% for point in trackPoints %}
                 names.push("{{point.name}}");
                 lats.push("{{point.Lat}}");
                 lons.push("{{point.Lon}}");
             {% endfor %}
+           
+            console.log(tempLine);
             for (i = 0; i < names.length; i++) {
-                //temp = new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]]));([lons[i],lats[i]])), 
-               //temp.setId(i);
+                var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
+                //tempLine.appendCoordinate(ol.proj.fromLonLat([lons[i],lats[i]]));
                 //temp = new ol.geom.Point(ol.proj.fromLonLat
-                //trackerColl.push(temp);
+                sourceTracking.addFeature(tempTrack);
+
+                if (names.slice(0, (i-1)).includes(names[i])==false){
+                    var tempLine = new ol.geom.LineString ([]);
+                    var lineFeature =new ol.Feature(tempLine);
+                    lineFeature.setId(names[i]);
+                    lines.push(lineFeature);
+                }else{
+                    for (j = 0; j < lines.length; j++) {
+                        if (lines[j].getId()==names[i]){
+                            var tempLineGeom = lines[j].getGeometry();
+                            tempLineGeom.appendCoordinate(ol.proj.fromLonLat([lons[i],lats[i]]));
+                        };
+                    }
+                };
+
+                
             }; 
+            for (k = 0; k < lines.length; k++) {
+                console.log(lines[k]);
+                sourceTrackingLines.addFeature(lines[k]);
+            };
+        
         };
+
+        ////// map zoom logger
+        var zoomLevel = map.getView().getZoom();
+        map.on('moveend', function(e) {
+            zoomLevel = map.getView().getZoom();
+            //console.log('zoom level');
+           // console.log(zoomLevel);
+           if (zoomLevel >= 15){
+               trackingLayer2.setStyle(hideStyle);
+               trackingLayer.setStyle(markerStyle);
+           } else{
+                trackingLayer.setStyle(hideStyle);     
+                trackingLayer2.setStyle(markerStyle);
+           };
+        });
         hideSat();
         addInteraction();
         vectorLayerListener();
         toggleStreets();
         buildTrackSet();
 
-        function track(){
-            var targetName = document.getElementById('trackerID').value;
-            for (i = 0; i < names.length; i++) {
-                if (names[i]==targetName){
-                    console.log('longitude')
-                    console.log(lons[i])
-                    console.log('latitude')
-                    console.log(lats[i])
-                    var temp = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([-0.2704562,51.504194999999996])),
-                    );
-                };
-            }; 
-            
-                
-        };
         // grid segArray.forEach
         // leave notes about features
         // home buttond
