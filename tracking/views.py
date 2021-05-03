@@ -8,8 +8,7 @@ from django.views.generic import View
 
 class trackingHandler(View):
     def get(self, request):
-        return render(request, 'tracking.html')
-
+            return render(request, 'tracking.html')
     def post(self,request):
         if request.is_ajax:
             # ID = request.POST['ID']
@@ -20,7 +19,7 @@ class trackingHandler(View):
             ID = request.POST.get('ID')
             Lon = request.POST.get('Lon')
             Lat = request.POST.get('Lat')
-            new = trackingPoint(ID=ID,Lat=Lat,Lon=Lon)
+            new = trackingPoint(name=ID,Lat=Lat,Lon=Lon)
             new.save()
             return JsonResponse({'trackingPoint':ID},status=200)
         else:

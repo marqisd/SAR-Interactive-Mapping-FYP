@@ -1,12 +1,18 @@
 <!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 <html>
   <head>
     <meta charset="utf-8">
     <title>Landing Page</title>
   </head>
   <body>
-    <p>Hello World</p>
-    <a href="/main">Main</a>
-    <a href="/tracking">Tracking</a>
+    <a class="landingButton" style="top: 10%;" href="/details">New Search</a><br><br>
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="text" id="projCode" name="projCode" style="width:70%; height:5%; top: 36%; position: absolute; display: block; margin-left: auto; margin-right: auto; left: 15%;"></input><br><br>
+      <input class="landingButton" type="submit" value="Continue Search" name="submit"  style="top: 25%;"></input><br><br>
+    </form>    
+    <a class="landingButton" style="top: 45%;"  href="/tracking">Tracking</a><br><br>
   </body>
 </html>

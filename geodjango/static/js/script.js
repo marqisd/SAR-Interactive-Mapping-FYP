@@ -3,6 +3,7 @@ var y;
 var currentSegmentID;
 var currentFeat;
 var currentMarkerID;
+var currentTrackID;
 
 var menuMainSet = ["cMenuMain","cMenuN","cMenuNE","cMenuE","cMenuSE","cMenuS","cMenuSW","cMenuW","cMenuNW"];
 var menuLayerSet = ["lMenuMain","lMenuN","lMenuNE","lMenuE","lMenuSE","lMenuS","lMenuSW","lMenuW","lMenuNW"];
@@ -72,14 +73,23 @@ function hideSegmentEditMenu(){
 function hideMarkerEditMenu(){
     document.getElementById("markerEditMenu").style.display="none";
 };
+function hideGridMenu(){
+    document.getElementById("gridOptions").style.display="none";
+};
 function showSegmentEditMenu(){
     hideSegmentEditMenu();
     document.getElementById("segmentEditMenu").style.display="block";
     document.getElementById("segName").value = currentSegmentID;
 };
+
 function showMarkerEditMenu(){
     document.getElementById("markerEditMenu").style.display="block";
     document.getElementById("markerName").value = currentMarkerID;
+};
+function showGridMenu(){
+    hideGridMenu();
+    document.getElementById("gridOptions").style.display="block";
+    document.getElementById("gridSize").value = gridsize;
 };
 
 function layerMenuBack(){
@@ -98,6 +108,7 @@ function onLoad() {
     // var ele = document.getElementById("menuMainSet");
     // ele.classList.add("shrink");
     hideLayerMenu();
+    hideGridMenu();
     hideSegmentMenu();
     hideMenuMain(); 
     hideFeatureMenu(); 

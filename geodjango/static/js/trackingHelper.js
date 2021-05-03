@@ -1,13 +1,14 @@
 var Lat = document.getElementById("Lat");
 var Lon = document.getElementById("Lon");
 var ID = document.getElementById("ID");
+var Ajax = document.getElementById("ajax");
 
 $(document).ready(function(){ 
     var csrf = $("input[name=csrfmiddlewaretoken]").val();
     temp = document.getElementById("ID").value;
     console.log(temp);
     $("#ajax").click(function(){
-        //var data = [ID.value,Lon.value,Lat.value];
+        getLocation()
         $.ajax({
             url:'',
             data: {ID: ID.value,
@@ -23,6 +24,19 @@ $(document).ready(function(){
     });
 
 });
+
+var checkbox = document.querySelector("input[name=trackOn]");
+var trackTimer;
+checkbox.addEventListener('change', function() {
+  if (this.checked) {
+    Ajax.click()
+    trackTimer = setInterval(function(){ Ajax.click(); }, 60000);
+  } else {
+    Ajax.click()
+    clearInterval(trackTimer);
+  }
+});
+
 
 var Lat = document.getElementById("Lat");
 var Lon = document.getElementById("Lon");
