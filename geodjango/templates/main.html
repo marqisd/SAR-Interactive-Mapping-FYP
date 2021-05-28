@@ -940,7 +940,7 @@
 
             {% endfor %}
             trackingColl.clear();
-            updateResourceList();
+            //updateResourceList();
             for (i = 0; i < names.length; i++) {
                 var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
                 sourceTracking.addFeature(tempTrack);
@@ -1126,7 +1126,7 @@
 </script>  
 
     {% load static %}
-    <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
