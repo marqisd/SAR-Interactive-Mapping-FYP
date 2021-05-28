@@ -939,7 +939,8 @@
                 time.push("{{point.dateTime}}")
 
             {% endfor %}
-            trackingColl.clear();
+            sourceTrackingLines.clear();
+            sourceTracking.clear();
             //updateResourceList();
             for (i = 0; i < names.length; i++) {
                 var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
@@ -987,7 +988,8 @@
                 assign.push(dataT[6]);
                 time.push(dataT[7]);
             };
-            trackingColl.clear();
+            sourceTrackingLines.clear();
+            sourceTracking.clear();
             updateResourceList();
             for (i = 0; i < names.length; i++) {
                 var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
