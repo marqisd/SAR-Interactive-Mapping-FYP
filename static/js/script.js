@@ -3,11 +3,13 @@ var y;
 var currentSegmentID;
 var currentFeat;
 var currentMarkerID;
+var currentTrackID;
 
 var menuMainSet = ["cMenuMain","cMenuN","cMenuNE","cMenuE","cMenuSE","cMenuS","cMenuSW","cMenuW","cMenuNW"];
 var menuLayerSet = ["lMenuMain","lMenuN","lMenuNE","lMenuE","lMenuSE","lMenuS","lMenuSW","lMenuW","lMenuNW"];
 var menuSegmentSet = ["sMenuMain","sMenuN","sMenuNE","sMenuE","sMenuSE","sMenuS","sMenuSW","sMenuW","sMenuNW"];
 var menuFeatureSet = ["fMenuMain","fMenuN","fMenuNE","fMenuE","fMenuSE","fMenuS","fMenuSW","fMenuW","fMenuNW"];
+var menuIndicateSet = ["iMenuMain","iMenuN","iMenuNE","iMenuE","iMenuSE","iMenuS","iMenuSW","iMenuW","iMenuNW"];
 
 function hideSelf(iD) { 
     var subMenu = document.getElementById(iD);
@@ -66,22 +68,54 @@ function hideSegmentMenu(){
 function hideFeatureMenu(){
     document.getElementById("menuFeatureSet").style.display="none";
 };
+function hideIndicateMenu(){
+    document.getElementById("menuIndicateSet").style.display="none";
+};
 function hideSegmentEditMenu(){
     document.getElementById("segmentEditMenu").style.display="none";
 };
 function hideMarkerEditMenu(){
     document.getElementById("markerEditMenu").style.display="none";
 };
+function hideGridMenu(){
+    document.getElementById("gridOptions").style.display="none";
+};
+
+function hideAssignMenu(){
+    document.getElementById("assignSidebar").style.display="none";
+    document.getElementById("assignToggle").innerHTML = ">";
+    document.getElementById("assignToggle").style.left = "0%";
+};
+function showAssignMenu(){
+    hideAssignMenu();
+    document.getElementById("assignSidebar").style.display="block";
+    document.getElementById("assignToggle").innerHTML = "<";
+    document.getElementById("assignToggle").style.left = "20%";
+};
 function showSegmentEditMenu(){
     hideSegmentEditMenu();
     document.getElementById("segmentEditMenu").style.display="block";
     document.getElementById("segName").value = currentSegmentID;
 };
+
 function showMarkerEditMenu(){
     document.getElementById("markerEditMenu").style.display="block";
     document.getElementById("markerName").value = currentMarkerID;
 };
+function showGridMenu(){
+    hideGridMenu();
+    document.getElementById("gridOptions").style.display="block";
+    document.getElementById("gridSize").value = gridsize;
+};
 
+function toggleAssignMenu(){
+    var state = document.getElementById("assignSidebar").style.display;
+    if (state == "block"){
+        hideAssignMenu();
+    }else{
+        showAssignMenu();
+    };
+};
 function layerMenuBack(){
     document.getElementById("menuLayerSet").style.display="none";
     openMenuMain()
@@ -94,10 +128,17 @@ function featureMenuBack(){
     document.getElementById("menuFeatureSet").style.display="none";
     openMenuMain()
 };
+function indicateMenuBack(){
+    document.getElementById("menuIndicateSet").style.display="none";
+    openMenuMain()
+};
 function onLoad() {
     // var ele = document.getElementById("menuMainSet");
     // ele.classList.add("shrink");
+    hideIndicateMenu();
+    hideAssignMenu();
     hideLayerMenu();
+    hideGridMenu();
     hideSegmentMenu();
     hideMenuMain(); 
     hideFeatureMenu(); 
@@ -183,7 +224,7 @@ function openMenuMain(){
 }
  function openMenuLayers(){
     hideMenuMain();
-    document.getElementById("menuLayerSet").style.display="block"
+    document.getElementById("menuLayerSet").style.display="block";
     for (i = 0; i < menuLayerSet.length; i++){
         var cMenu = document.getElementById(menuLayerSet[i]);
         if (i==0){
@@ -224,7 +265,7 @@ function openMenuMain(){
 
 function openMenuSegment(){
     hideMenuMain();
-    document.getElementById("menuSegmentSet").style.display="block"
+    document.getElementById("menuSegmentSet").style.display="block";
     for (i = 0; i < menuLayerSet.length; i++){
         var cMenu = document.getElementById(menuSegmentSet[i]);
         if (i==0){
@@ -265,7 +306,7 @@ function openMenuSegment(){
 
 function openMenuFeature(){
     hideMenuMain();
-    document.getElementById("menuFeatureSet").style.display="block"
+    document.getElementById("menuFeatureSet").style.display="block";
     for (i = 0; i < menuLayerSet.length; i++){
         var cMenu = document.getElementById(menuFeatureSet[i]);
         if (i==0){
@@ -303,3 +344,199 @@ function openMenuFeature(){
 
    }
 }
+function openMenuLayers(){
+    hideMenuMain();
+    document.getElementById("menuLayerSet").style.display="block";
+    for (i = 0; i < menuLayerSet.length; i++){
+        var cMenu = document.getElementById(menuLayerSet[i]);
+        if (i==0){
+            cMenu.style.top = (y-130)+'px';
+            cMenu.style.left = (x-60)+'px';
+        }else if(i==1){
+            cMenu.style.top = (y-115-160)+'px';
+            cMenu.style.left = (x-50)+'px';
+        }else if(i==2){
+            cMenu.style.top = (y-115-120)+'px';
+            cMenu.style.left = (x-50+120)+'px';
+        }
+        else if(i==3){
+            cMenu.style.top = (y-115)+'px';
+            cMenu.style.left = (x-50+160)+'px';
+        }else if(i==4){
+            cMenu.style.top = (y-115+120)+'px';
+            cMenu.style.left = (x-50+120)+'px';
+        }else if(i==5){
+            cMenu.style.top = (y-115+160)+'px';
+            cMenu.style.left = (x-50)+'px';
+        }else if(i==6){
+            cMenu.style.top = (y-115+120)+'px';
+            cMenu.style.left = (x-50-120)+'px';
+        }
+        else if(i==7){
+            cMenu.style.top = (y-115)+'px';
+            cMenu.style.left = (x-50-160)+'px';
+        }else {
+            cMenu.style.top = (y-115-120)+'px';
+            cMenu.style.left = (x-50-120)+'px';
+        }    
+        var cMenu = document.getElementById(menuMainSet[i]);
+        console.log(cMenu);
+
+   }
+}
+
+function openMenuIndicate(){
+    hideMenuMain();
+    document.getElementById("menuIndicateSet").style.display="block";
+    for (i = 0; i < menuLayerSet.length; i++){
+        var cMenu = document.getElementById(menuIndicateSet[i]);
+        if (i==0){
+            cMenu.style.top = (y-130)+'px';
+            cMenu.style.left = (x-60)+'px';
+        }else if(i==1){
+            cMenu.style.top = (y-115-160)+'px';
+            cMenu.style.left = (x-50)+'px';
+        }else if(i==2){
+            cMenu.style.top = (y-115-120)+'px';
+            cMenu.style.left = (x-50+120)+'px';
+        }
+        else if(i==3){
+            cMenu.style.top = (y-115)+'px';
+            cMenu.style.left = (x-50+160)+'px';
+        }else if(i==4){
+            cMenu.style.top = (y-115+120)+'px';
+            cMenu.style.left = (x-50+120)+'px';
+        }else if(i==5){
+            cMenu.style.top = (y-115+160)+'px';
+            cMenu.style.left = (x-50)+'px';
+        }else if(i==6){
+            cMenu.style.top = (y-115+120)+'px';
+            cMenu.style.left = (x-50-120)+'px';
+        }
+        else if(i==7){
+            cMenu.style.top = (y-115)+'px';
+            cMenu.style.left = (x-50-160)+'px';
+        }else {
+            cMenu.style.top = (y-115-120)+'px';
+            cMenu.style.left = (x-50-120)+'px';
+        }    
+        var cMenu = document.getElementById(menuMainSet[i]);
+        console.log(cMenu);
+
+   }
+}
+
+////////////////////////////////////// resource management stuff //////////////////////////////
+var resourceList = [];
+var activeBox;
+var body =document.getElementById("assignHelper");
+
+function addResource(){
+    var newResourceName = document.getElementById("resourceName").value;
+    var newResourceType = document.getElementById("resourceType").value;
+    resourceList.push([newResourceName,newResourceType,"not assigned","idle","not tracked",""]);
+    updateResourceList();
+};
+
+function updateResourceList(){
+    boxArea.innerHTML = '';
+    resourceList.forEach(x => genNewAssignEntry(x));
+};
+
+var boxArea = document.getElementById("resourceList");
+function genNewAssignEntry(resourceData){
+    for (i=0; i<names.length;i++){
+        if(names[i]==resourceData[0]){
+        resourceData[3]=stats[i];
+        resourceData[4]=message[i];
+        };
+    };
+    var box = document.createElement("div");
+    box.className = "assignBox";
+    box.id = resourceData[0];
+    box.draggable = true;
+
+    box.onmouseover = function() {setActiveBox(this)};
+    
+    box.ondragstart = function() {createBoxTarget()};
+    console.log(box);
+    if (resourceData[5] != ""){
+        console.log('assignment made');
+        resourceData[2] = resourceData[5].getId();
+    };
+    box.innerHTML=resourceData[0].concat("<button id='assignDelete' class='assignDelete' onclick='deleteBox(this)' style='align:right'>x</button>","<br>",resourceData[1],"<br>",resourceData[2],"<br>",resourceData[3],"<br>",resourceData[4]);
+    boxArea.appendChild(box);
+};
+
+function setActiveBox(boxSel){
+    activeBox = boxSel;
+};
+
+function deleteBox(boxSel){
+    var box = boxSel.parentElement;
+    for (i=0;i<resourceList.length;i++){
+        if (box.id == (resourceList[i])[0]){
+            resourceList.splice(i,1);
+        };
+    };
+    box.remove();
+    updateResourceList();
+};
+
+function createBoxTarget(){
+    var target = document.createElement("div");
+    target.style.width = "100%";
+    target.style.height = "100%";
+    target.style.background = "#ffffff66";
+    //target.style.zIndex = "3000";
+    target.ondragover= function() {dropabble(event)};
+    target.ondrop = function() {dragAssign(this,event)};
+    console.log(target);
+    body.style.display="block";
+    body.appendChild(target);
+};
+
+function dragAssign(self,e){
+    e.preventDefault();
+    var hoverArray = map.getFeaturesAtPixel([e.clientX,e.clientY]);
+    var segArray = segColl.getArray();
+    segArray.forEach(feature => checkFeat(feature,hoverArray));
+    body.style.display="none";
+    self.remove();
+    console.log(activeBox.id);
+    if (hovering==true){
+        for (i=0;i<resourceList.length;i++){
+            if (activeBox.id == (resourceList[i])[0]){
+                (resourceList[i])[5] = selected;
+            };
+        };
+    };
+    updateResourceList();
+};
+
+function dropabble(e) {
+    e.preventDefault();
+};
+
+///////////////////////// ajax for tracking updates/////////////////////////
+var AjaxT = document.getElementById("AjaxT");
+var csrf = $("input[name=csrfmiddlewaretoken]").val();
+$(document).ready(function(){     
+    $(".AjaxT").click(function(){
+        $.ajax({
+            url: '',
+            type: 'get',
+            data: {
+                info: 'test hello'
+            },
+            success: function(response){
+                console.log(response.data);
+                buildTrackSet2(response.data);
+            }
+        });
+    });
+});
+
+var updateTimer;
+updateTimer = setInterval(function(){ AjaxT.click(); }, 60000);
+ 

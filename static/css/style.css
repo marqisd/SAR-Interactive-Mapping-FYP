@@ -13,7 +13,7 @@
 } */
 .buttonMapSat{
     position  : absolute;
-    background: #ffffff99;
+    background: #ffffffdd;
     right: 0px;
     width: 200px;
     border   : 0px solid #ffa500;
@@ -21,11 +21,13 @@
     font-size: 50px;  
     font-family: "Lucida Console", "Courier New", monospace;
     transition: transform .2s all;
+    outline:none;
 }
 .buttonMapSatActive{
-    border-left    : 6px solid #ffa500; 
-    background: #ffffff;
+    border-left    : 6px solid #ffffff; 
+    background: #ffa500;
     width: 250px;
+    outline:none;
     font-weight: bold;
 }
 .buttonMapSat:hover {
@@ -39,7 +41,7 @@
 }
 .ol-zoom-in{
     position  : absolute;
-    background: #ffffff99;
+    background: #ffffffdd;
     top: 200px;
     height: 70px;
     width: 70px;
@@ -58,7 +60,7 @@
 
 .ol-zoom-out{
     position  : absolute;
-    background: #ffffff99;
+    background: #ffffffdd;
     right: 0px;
     height: 70px;
     width: 70px;
@@ -160,11 +162,11 @@
     border-radius: 120px;
     overflow: hidden;
     cursor: pointer;
-    background: #ffffff66;
+    background: #ffffffdd;
     position: absolute;
     left: 0px;
     top: 0px;
-    font-size: 50px;
+    font-size: 20px;
     font-family: "Lucida Console", "Courier New", monospace;
     border    : 3px solid #ffa500;
     transition: transform .2s ease;
@@ -185,7 +187,7 @@
     border-radius: 90px;
     cursor: pointer;
     position: absolute;
-    background: #ffffff99;
+    background: #ffffffdd;
     border    : 3px solid #ffa500;
     font-size: 15px;
     font-family: "Lucida Console", "Courier New", monospace;
@@ -201,8 +203,8 @@
 }
 .circleMenuOuterActive {
     transform: scale(1.2s); 
-    background: #ffffffdd;
-    border    : 6px solid #ffa500;
+    background: #ffa500dd;
+    border    : 6px solid #ffffff;
     font-weight: bold;
 }
 .circleMenuEmpty{
@@ -250,7 +252,7 @@
     height: 160px;
     width: 190px;
     position: absolute;
-    background: #ffffff99;
+    background: #ffffffdd;
     border    : 3px solid #ffa500;
     font-size: 15px;
     font-family: "Lucida Console", "Courier New", monospace;
@@ -276,4 +278,56 @@
     width: 30px;
     border    : 2px solid #aaaaaa;
     background: #00ff15;
+}
+.landingButton{
+    height: 10%;
+    width: 70%;  
+    border-radius: 30px;
+    position: absolute;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    left: 15%;
+    background: #ffa500;
+    border    : 3px solid #ffa500;
+    color: white;
+    font-size: 300%;
+    font-family: "Lucida Console", "Courier New", monospace;
+    text-align: center;
+}
+
+.assignSidebar{
+    height: 99%;
+    width: 20%;  
+    position: absolute;
+    left: 0%;
+    border-right   : 3px solid #ffa500;
+    background: #ffffff99;
+}
+
+.assignToggle{
+    left: 0%;
+    top: 9%;
+    position: absolute;
+    border-right   : 3px solid #ffa500;
+    background: #ffffff;
+    height: 3%;
+    width: 3%;  
+    z-index: 3003;
+}
+.assignToggle:hover {
+    background: #ffffffdd;
+    border-right    : 6px solid #ffa500;
+}
+
+.assignBox{
+    border  : 1px solid #000000;
+    background: #ffffffdd;
+    margin: 5px;
+    width : 90%;
+}
+
+.resourceList{
+    overflow: scroll;
+    height: 85%;
 }
