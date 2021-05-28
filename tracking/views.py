@@ -19,7 +19,9 @@ class trackingHandler(View):
             ID = request.POST.get('ID')
             Lon = request.POST.get('Lon')
             Lat = request.POST.get('Lat')
-            new = trackingPoint(name=ID,Lat=Lat,Lon=Lon)
+            Status = request.POST.get('Status')
+            Message = request.POST.get('Message')
+            new = trackingPoint(name=ID,Lat=Lat,Lon=Lon,status=Status,message=Message)
             new.save()
             return JsonResponse({'trackingPoint':ID},status=200)
         else:

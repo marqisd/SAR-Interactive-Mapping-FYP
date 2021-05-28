@@ -1,6 +1,8 @@
 var Lat = document.getElementById("Lat");
 var Lon = document.getElementById("Lon");
 var ID = document.getElementById("ID");
+var Status = document.getElementById("Status");
+var Message = document.getElementById("Message");
 var Ajax = document.getElementById("ajax");
 
 $(document).ready(function(){ 
@@ -14,11 +16,13 @@ $(document).ready(function(){
             data: {ID: ID.value,
                 Lon: Lon.value,
                 Lat: Lat.value,
+                Status: Status.value,
+                Message: Message.value,
                 csrfmiddlewaretoken: csrf,
             },
             type: 'post',
             success: function(response){
-                console.log('track succesfull')
+                console.log('track succesfull');
             }
         })
     });

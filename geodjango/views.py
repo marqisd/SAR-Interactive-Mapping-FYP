@@ -23,10 +23,19 @@ def details(request):
         return render(request, 'details.html')
 
 def main(request,projname):
-    trackPoints = trackingPoint.objects.all()
-    projectData= projectProfile.objects.filter(name=projname)
-    args={'trackPoints':trackPoints,'projData':projectData}
-    return render(request, 'main.html',args)
+    is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    if is_ajax==True:
+        trackPoints = trackingPoint.objects.all()
+        print(trackPoints.values_list())
+        track_list =  trackPoints.values_list()
+        track_list = list(track_list)
+        projectData= projectProfile.objects.filter(name=projname)
+        return JsonResponse({'data':track_list},status=200,safe=False)
+    else:
+        trackPoints = trackingPoint.objects.all()
+        projectData= projectProfile.objects.filter(name=projname)
+        args={'trackPoints':trackPoints,'projData':projectData}
+        return render(request, 'main.html',args)
 
 def landing(request):
     if request.method == 'POST':

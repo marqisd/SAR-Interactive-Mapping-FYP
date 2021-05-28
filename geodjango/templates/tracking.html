@@ -9,13 +9,22 @@
   <form id="createTaskForm" method="post">
     {% csrf_token %}    
     <label for="ID">Tracking ID</label>
-    <label for="Lat">Lat</label>
-    <label for="Lon">Lon</label>
-    <input type="text" id="ID" name="ID"></input><br><br>    
+    <input type="text" id="ID" name="ID"></input><br><br> 
+    <label for="Lat">Lat</label>   
     <input type="text" id="Lat" name="Lat"></input><br><br> 
+    <label for="Lon">Lon</label>
     <input type="text" id="Lon" name="Lon"></input>  
-    <button type ="button" id="ajax" class="ajax">Track Now</button>
-    <p>Hello World</p>
+
+    <label for="Status">Status</label>
+    <select name="Status" id="Status">
+            <option value="Idle">Idle</option>
+            <option value="On Route">On Route</option>
+            <option value="Active">Active</option>
+            <option value="Stalled">Stalled</option>
+    </select><br><br> 
+    <label for="Message">Message</label>
+    <textarea id="Message" name="Message"></textarea> 
+    <button type ="button" id="ajax" class="ajax">Update Tracking</button><br><br> 
   </form>
   <input type="checkbox" id="trackOn" name="trackOn" value="trackOn">
   <label for="trackOn">Track Position</label><br>

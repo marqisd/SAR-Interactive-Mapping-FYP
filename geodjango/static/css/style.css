@@ -295,3 +295,39 @@
     font-family: "Lucida Console", "Courier New", monospace;
     text-align: center;
 }
+
+.assignSidebar{
+    height: 99%;
+    width: 20%;  
+    position: absolute;
+    left: 0%;
+    border-right   : 3px solid #ffa500;
+    background: #ffffff99;
+}
+
+.assignToggle{
+    left: 0%;
+    top: 9%;
+    position: absolute;
+    border-right   : 3px solid #ffa500;
+    background: #ffffff;
+    height: 3%;
+    width: 3%;  
+    z-index: 3003;
+}
+.assignToggle:hover {
+    background: #ffffffdd;
+    border-right    : 6px solid #ffa500;
+}
+
+.assignBox{
+    border  : 1px solid #000000;
+    background: #ffffffdd;
+    margin: 5px;
+    width : 90%;
+}
+
+.resourceList{
+    overflow: scroll;
+    height: 85%;
+}
