@@ -2,7 +2,7 @@
 {% include "dataTables.html" %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-<body onload="onLoad()">    
+<body id='body' onload="onLoad()">    
     <div onmousedown="onClick(event)" onmousemove="onMouseHover(event)">
     <div id='toolTipBox' style="z-index:2001;" class="toolTip"></div>
     <span id="status"></span>
@@ -20,28 +20,18 @@
         <input type="checkbox" id="ranges" name="Ranges" value="a">
         <input type="checkbox" id="grid" name="Ranges" value="d">
         <label for="track">track position<input id="track" type="checkbox"/></label>
-        <form class="form-inline">
-        <label for="type">Geometry type: &nbsp;</label>
-        <select class="form-control mr-2 mb-2 mt-2" id="type">
-            <option value="None">None</option>
-            <option value="Point">Point</option>
-            <option value="LineString">Line</option>
-            <option value="Polygon">Polygon</option>
-            <option value="Circle">Circle</option>
-        </select>
-        <input class="form-control mr-2 mb-2 mt-2" type="button" value="Undo" id="undo">
-        </form>
+        <button  id="AjaxT" name="AjaxT" class="AjaxT">Update Tracking</button> 
     </fieldset>
     <div class="menuMainSet" id="menuMainSet" style="z-index:3001">
         <button class="circleMenuCenter" id="cMenuMain" onclick="hideMenuMain()" style="z-index:3001">Close Menu</button>
-        <button class="circleMenuOuter" id="cMenuN" style="z-index:3001">Assign</button>
+        <button class="circleMenuOuter" id="cMenuN" onclick="showAssignMenu()" style="z-index:3001">Assign</button>
         <button class="circleMenuOuter" id="cMenuNE"  onclick="openMenuFeature()"style="z-index:3001">Features</button>
         <button class="circleMenuOuter" id="cMenuE" onclick="openMenuSegment()" style="z-index:3001">Segment</button>
         <button class="circleMenuOuter" id="cMenuSE"  style="z-index:3001">Spare</button>
         <button class="circleMenuOuter" id="cMenuS"  style="z-index:3001">Options</button>
         <button class="circleMenuOuter" id="cMenuSW" onclick="openMenuLayers()" style="z-index:3001" >Layers</button>
         <button class="circleMenuOuter" id="cMenuW"  style="z-index:3001">Profile</button>
-        <button class="circleMenuOuter" id="cMenuNW"  style="z-index:3001">Draw</button>
+        <button class="circleMenuOuter" id="cMenuNW" onclick="openMenuIndicate()" style="z-index:3001">Indicate</button>
     </div>
     <div class="menuLayersSet" id="menuLayerSet" style="z-index:3001">
         <button class="circleMenuCenter" id="lMenuMain"  onclick= "layerMenuBack()" style="z-index:3001; font-size:35px">Main Menu</button>
@@ -76,6 +66,17 @@
         <button class="circleMenuEmpty" id="fMenuW"  style="z-index:3001"></button>
         <button class="circleMenuEmpty" id="fMenuNW"  style="z-index:3001"></button>
     </div>
+    <div class="menuIndicateSet" id="menuIndicateSet" style="z-index:3001">
+        <button class="circleMenuCenter" id="iMenuMain"  onclick= "indicateMenuBack()" style="z-index:3001; font-size:35px">Main Menu</button>
+        <button class="circleMenuOuter" id="iMenuN" onclick="drawDraw('Pen')" style="z-index:3001">Pen</button>
+        <button class="circleMenuOuter" id="iMenuNE" onclick="drawDraw('Square')" style="z-index:3001">Square</button>
+        <button class="circleMenuOuter" id="iMenuE" onclick="drawDraw('Circle')" style="z-index:3001">Circle</button>
+        <button class="circleMenuOuter" id="iMenuSE" onclick= "undoDraw()" style="z-index:3001">Undo</button>
+        <button class="circleMenuOuter" id="iMenuS" onclick= "hideIndicateMenu()" style="z-index:3001">Close Menu</button>
+        <button class="circleMenuEmpty" id="iMenuSW" style="z-index:3001" ></button>
+        <button class="circleMenuEmpty" id="iMenuW" style="z-index:3001"></button>
+        <button class="circleMenuOuter" id="iMenuNW"  onclick="drawDraw('LineString')" style="z-index:3001">Line</button>
+    </div>
     <div class= "segmentEditMenu" id= "segmentEditMenu" style="z-index:3002">
         <label for="segName">Segment Name</label>
         <input type="text" id="segName" name="segName"><br><br>
@@ -106,12 +107,28 @@
     </div>       
     <div class= "segmentEditMenu" id= "gridOptions" style="z-index:3002">
         <label for="segName">Grid Square Length</label>
-        <input type="text" id="gridSize" name="gridSize"><br><br>
+        <input type="text" id="gridSize" name="gridSize">
         <button id="close" onclick= "hideGridMenu()">close menu</button>
     </div>
-    {% comment %} <label for="trackerID">TrackerID</label>
-    <input type="text" id="trackerID" name="trackerID"><br><br>
-    <input type="Button" id="trackerButton" onclick = "track()" name="trackerButton" value="Show Track"></input>  {% endcomment %}
+
+    <div class= "assignSidebar" id= "assignSidebar" style="z-index:3003">
+        <label for="resourceName">Resource ID</label>
+        <input type="text" id="resourceName" name="resourceName" style="width:90%; align:center"></input><br><br>
+        <select  name="resourceType" id="resourceType" style="">
+            <option value="squad">Foot Squad</option>
+            <option value="k9">K9</option>
+            <option value="bike">Bike</option>
+            <option value="vehicle">Land Vehicle</option>
+            <option value="done">Drone</option>
+            <option value="heli">Helicopter</option>
+            <option value="other">Other</option>
+        </select>
+        <button id="newResource" onclick= "addResource()" name="newResource">New Resource</button><br><br>
+        <fieldset name="resourceList" class="resourceList" id="resourceList"></fieldset>
+    </div>
+
+    <button class="assignToggle" id="assignToggle" onclick="toggleAssignMenu()"> > </button>
+    <div class"assignHelper" id="assignHelper" style = "width: 100%; height: 100%; z-index: 1000; position: absolute; display: none"></div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
@@ -119,7 +136,7 @@
     <span id="status"></span>   
     <script type="text/javascript">
         var mouseState = 0;
-        // mouse states: 0 - default 1 - drawing 2 - gemoetry edit 3 - marker maker
+        // mouse states: 0 - default 1 - drawing 2 - gemoetry edit 3 - marker maker 4-zoomed in 5- dragging
         var key = 'pk.eyJ1IjoibWFycWkiLCJhIjoiY2tsN2U3eDhrMDU0YzMxcHNzYm96Z2VsdyJ9.ttzqAmH0t8YNXZAvzEmTxA';   
         var source = new ol.source.Vector({wrapX: false});
         var vector = new ol.layer.Vector({source: source,zIndex: 50,format: new ol.format.GeoJSON(),});
@@ -294,33 +311,7 @@
                 document.getElementById("lMenuW").classList.add("circleMenuOuterActive");
             }
             vectorLayerListener() ;  
-        }
-        //////////////// sample draw code
-        var typeSelect = document.getElementById('type');
-        var draw; // global so we can remove it later
-        function addInteraction() {
-        var typeSelect = document.getElementById('type');
-        var value = typeSelect.value;
-        if (value !== 'None') {
-            draw = new ol.interaction.Draw({
-            source: source,
-            type: typeSelect.value,
-            });
-            map.addInteraction(draw);
-            };
         };
-
-        /**
-        * Handle change event.
-        */
-        typeSelect.onchange = function () {
-        map.removeInteraction(draw);
-        addInteraction();
-        };
-
-        document.getElementById('undo').addEventListener('click', function () {
-        draw.removeLastPoint();
-        });
 
 /////////////////////////////////////////styles///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -356,7 +347,7 @@
             width: 2,
             }),
             fill: new ol.style.Fill({
-            color: 'rgba(100,100, 100, 0.1)',
+            color: 'rgba(255,100, 100, 0.1)',
             }),
         });
         var segStyleHover = new ol.style.Style({    
@@ -375,7 +366,7 @@
             width: 2,
             }),
             fill: new ol.style.Fill({
-            color: 'rgba(100,100, 100, 0.1)',
+            color: 'rgba(180,180, 100, 0.1)',
             }),
         });
         var segStyleYellowHover = new ol.style.Style({    
@@ -384,7 +375,7 @@
             width: 4,
             }),
             fill: new ol.style.Fill({
-            color: 'rgba(255,100, 100, 0.3)',
+            color: 'rgba(180,180, 100, 0.3)',
             }),
         });
 
@@ -394,7 +385,7 @@
             width: 2,
             }),
             fill: new ol.style.Fill({
-            color: 'rgba(100,100, 100, 0.1)',
+            color: 'rgba(100,255, 100, 0.1)',
             }),
         });
         var segStyleGreenHover = new ol.style.Style({    
@@ -403,7 +394,7 @@
             width: 4,
             }),
             fill: new ol.style.Fill({
-            color: 'rgba(255,100, 100, 0.3)',
+            color: 'rgba(100,255, 100, 0.3)',
             }),
         });
 
@@ -478,7 +469,25 @@
             }),
         });
 
+        var drawStyle =  new ol.style.Style({   
+            stroke: new ol.style.Stroke({
+            color: 'blue',
+            width: 2,
+            }),
+            text: new ol.style.Text({
+                text: ''
+            }),
+        });
 
+        var drawStyleHover =  new ol.style.Style({   
+            stroke: new ol.style.Stroke({
+            color: 'blue',
+            width: 7,
+            }),
+            text: new ol.style.Text({
+                text: ''
+            }),
+        });
 //////////////////////////////////////end styles//////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -490,6 +499,8 @@
         var sourceTrackingLines = new ol.source.Vector({wrapX: false});
         var sourceSearchRanges = new ol.source.Vector({wrapX: false});
         var sourceGrid = new ol.source.Vector();
+        var sourceIndicate= new ol.source.Vector({wrapX: false});
+
 
         var segLayer = new ol.layer.Vector({source: sourceSeg,style: segStyle,zIndex: 200});
         map.addLayer(segLayer);
@@ -503,11 +514,14 @@
         map.addLayer(rangeLayer);
         var gridLayer = new ol.layer.Vector({source: sourceGrid,style: gridStyle,zIndex: 197});
         map.addLayer(gridLayer);
+        var indicateLayer = new ol.layer.Vector({source: sourceIndicate,style: drawStyle,zIndex: 202});
+        map.addLayer(indicateLayer);
 
         var segColl = new ol.Collection();
         var markerColl = new ol.Collection();
         var trackingColl = new ol.Collection();
         var rangeColl = new ol.Collection();
+        var indicateColl = new ol.Collection();
 
         var snap = new ol.interaction.Snap({
             source: sourceSeg,
@@ -517,9 +531,83 @@
         var marker;
         var point;
         var modify;
+        var draw;
+    
+        var dragPanInt;
 
+        function removeMapInt(){
+            map.getInteractions().forEach(function(interaction) {
+                if (interaction instanceof ol.interaction.DragPan) {
+                    dragPanInt = interaction;
+                };
+            }, this);
+            
+            if (dragPanInt) {
+                map.removeInteraction(dragPanInt);
+            };
+        };
+
+        const squareFun = new ol.interaction.Draw.createRegularPolygon(4);
+        console.log(squareFun);
+
+        function drawDraw(drawType){
+            removeInteractions();
+            removeMapInt();
+            mouseState = 1;
+            if (drawType == 'Pen'){
+                draw = new ol.interaction.Draw({
+                    type: 'LineString',
+                    source: sourceIndicate,
+                    features: indicateColl,
+                    freehand: true,
+                });
+            }else if (drawType == 'LineString'){
+                draw = new ol.interaction.Draw({
+                    type: drawType,
+                    source: sourceIndicate,
+                    features: indicateColl,
+                    maxPoints: 2,
+                });
+            }else if (drawType == 'Square'){
+                draw = new ol.interaction.Draw({
+                    type: drawType,
+                    source: sourceIndicate,
+                    features: indicateColl,
+                    maxPoints: 4,
+                    geometryFunction: new ol.interaction.Draw.createRegularPolygon(4),
+                    freehand: true,
+                });
+            }else if (drawType == 'Circle'){
+                draw = new ol.interaction.Draw({
+                    type: drawType,
+                    source: sourceIndicate,
+                    features: indicateColl,
+                    freehand: true,
+                });    
+            }else if (drawType == 'Text'){
+                draw = new ol.interaction.Draw({
+                    type: 'Point',
+                    source: sourceIndicate,
+                    features: indicateColl,
+                });
+                }else {
+                draw = new ol.interaction.Draw({
+                    type: drawType,
+                    source: sourceIndicate,
+                    features: indicateColl,
+                    maxPoints: 2,
+                });
+            };
+            map.addInteraction(draw);
+        };
+
+        function undoDraw(){
+            var drawFeatList = sourceIndicate.getFeatures();
+            sourceIndicate.removeFeature(drawFeatList[drawFeatList.length -1]);
+        };
         function drawSegment(){
             removeInteractions();
+            removeMapInt();
             mouseState = 1;
             seg = new ol.interaction.Draw({
                 type: 'Polygon',
@@ -532,6 +620,7 @@
 
         function addMarker(){
             removeInteractions();
+            removeMapInt();
             mouseState = 3;
             marker = new ol.interaction.Draw({
                 type: 'Point',
@@ -556,6 +645,11 @@
             map.removeInteraction(snap); 
             map.removeInteraction(modify);
             map.removeInteraction(marker);
+            map.removeInteraction(draw);
+
+            if (dragPanInt) {
+                map.addInteraction(dragPanInt);
+            };
 
             var glist = segColl.getArray();
             for (i = 0; i < glist.length; i++) {
@@ -572,6 +666,23 @@
             };
             mouseState=0;
         };
+
+        {% comment %} document.getElementById("mouseState").addEventListener("change", function(){
+            if (mouseState == 0){
+                map.addInteraction(ol.interaction.DragPan);
+                map.addInteraction(ol.interaction.DoubleClickZoom);
+                map.addInteraction(ol.interaction.MouseWheelZoom);
+                map.addInteraction(ol.interaction.KeyboardZoom);
+                map.addInteraction(ol.interaction.DragZoom);
+            }else{
+                map.removeInteraction(ol.interaction.DragPan);
+                map.removeInteraction(ol.interaction.DoubleClickZoom);
+                map.removeInteraction(ol.interaction.MouseWheelZoom);
+                map.removeInteraction(ol.interaction.KeyboardZoom);
+                map.removeInteraction(ol.interaction.DragZoom);
+            };
+        }); {% endcomment %}
+        
         var selected = null;
         var status = document.getElementById('status');
         var highlightLayers = [segLayer];
@@ -593,6 +704,7 @@
                 tipBox.style.display = 'block';
                 tipBox.innerHTML = feat.getId() + "<br />" + coords ;
                 hovering = true;
+                selected = feat;
             } else{
                 if (feat.getStyle()==segStyle || feat.getStyle()==segStyleHover ){
                     feat.setStyle(segStyle); 
@@ -654,6 +766,16 @@
                 feat.setStyle(rangeStyle); 
             };
         };
+
+        function checkIndicate(feat,hoverArray){
+            if(hoverArray.includes(feat)){
+                hovering = true;
+                feat.setStyle(drawStyleHover);
+            }else{
+                feat.setStyle(drawStyle); 
+            };
+        };
+
         function checkFeatFocus (feat,hoverArray){
             if(hoverArray.includes(feat)){
                 var polygon = feat.getGeometry();
@@ -672,6 +794,7 @@
                 showMarkerEditMenu();
             };
         };
+
         //,layerFilter = (layerName => checkLayer(layerName))
         function onMouseHover(e){
             if (mouseState == 0){
@@ -687,6 +810,8 @@
                 trackingArray.forEach(feature => checkTracking(feature,hoverArray));
                 var rangeArray = rangeColl.getArray();
                 rangeArray.forEach(feature => checkRanges(feature,hoverArray));
+                var drawArray = indicateColl.getArray();
+                drawArray.forEach(feature => checkIndicate(feature,hoverArray));
 
                 tipBox.style.left= e.clientX ;
                 tipBox.style.top= e.clientY - 40;
@@ -789,17 +914,33 @@
         var lats = [];
         var lons = [];
         var lines = [];
+        var stats = [];
+        var message = [];
+        var assign = [];
+        var time = [];
+
         function buildTrackSet(){
             names = [];
             lats = [];
             lons = [];
             lines = [];
+            stats = [];
+            message = [];
+            assign = [];
+            time = [];
+
             {% for point in trackPoints %}
                 names.push("{{point.name}}");
                 lats.push("{{point.Lat}}");
                 lons.push("{{point.Lon}}");
+                stats.push("{{point.status}}");
+                message.push("{{point.message}}");
+                assign.push("{{point.assign}}");
+                time.push("{{point.dateTime}}")
+
             {% endfor %}
-           
+            trackingColl.clear();
+            updateResourceList();
             for (i = 0; i < names.length; i++) {
                 var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
                 sourceTracking.addFeature(tempTrack);
@@ -827,12 +968,67 @@
         
         };
 
+        function buildTrackSet2(data){
+            names = [];
+            lats = [];
+            lons = [];
+            lines = [];
+            stats = [];
+            message = [];
+            assign = [];
+            time = [];
+            for (i = 0; i < data.length; i++){
+                var dataT = data[i];
+                names.push(dataT[1]);
+                lats.push(dataT[2]);
+                lons.push(dataT[3]);
+                stats.push(dataT[4]);
+                message.push(dataT[5]);
+                assign.push(dataT[6]);
+                time.push(dataT[7]);
+            };
+            trackingColl.clear();
+            updateResourceList();
+            for (i = 0; i < names.length; i++) {
+                var tempTrack = new ol.Feature( new ol.geom.Point(ol.proj.fromLonLat([lons[i],lats[i]])));
+                sourceTracking.addFeature(tempTrack);
+                trackingColl.push(tempTrack);
+                if (names.slice(0, (i-1)).includes(names[i])==false){
+                    var tempLine = new ol.geom.LineString ([]);
+                    var lineFeature =new ol.Feature(tempLine);
+                    lineFeature.setId(names[i]);
+                    lines.push(lineFeature);
+                    trackingColl.push(lineFeature);
+                }else{
+                    for (j = 0; j < lines.length; j++) {
+                        if (lines[j].getId()==names[i]){
+                            var tempLineGeom = lines[j].getGeometry();
+                            tempLineGeom.appendCoordinate(ol.proj.fromLonLat([lons[i],lats[i]]));
+                        };
+                    }
+                };
+
+                
+            }; 
+            for (k = 0; k < lines.length; k++) {
+                sourceTrackingLines.addFeature(lines[k]);
+            };
+        
+        };
         ////// map zoom logger
         var zoomLevel = map.getView().getZoom();
         map.on('moveend', function(e) {
+            console.log(zoomLevel);
             zoomLevel = map.getView().getZoom();
             var trackingArray = trackingColl.getArray();
             trackingArray.forEach(feature => checkTracking(feature,[]));
+            if (zoomLevel >=14){
+                mouseState = 4;
+            };
+            if (zoomLevel <14){
+                removeInteractions();
+                mouseState = 0;
+            };
         });
 
         //////////////// draw search ranges
@@ -890,7 +1086,7 @@
             };
         };
         function grid2Seg(){
-            var gridsWidth =distance3*2000/gridsize;
+            var gridsWidth =distance3*1000/gridsize;
             console.log(gridsWidth);
             for (i=(-gridsWidth); i<gridsWidth; i++){
                 var tempHome  = ol.proj.fromLonLat(coordsHome);
@@ -902,17 +1098,25 @@
 
                 var py3 = py1 - gridsize;
 
-                var tempGrid = new ol.Feature( new ol.geom.LineString([[px1,py1],[px2,py1],[px2,py3],[px1,py3],[px1,py1]]));
-
+                var tempGrid = new ol.Feature( new ol.geom.Polygon([[[px1,py1],[px2,py1],[px2,py3],[px1,py3],[px1,py1]]]));
+                console.log(tempGrid);
                 segColl.push(tempGrid);
                 sourceSeg.addFeature(tempGrid);
                 
+                for (j=0; j<(gridsWidth*2)-1; j++){
+                    var py1 = py1 - gridsize;
+                    var py3 = py3 - gridsize;
+                    var tempGrid = new ol.Feature( new ol.geom.Polygon([[[px1,py1],[px2,py1],[px2,py3],[px1,py3],[px1,py1]]]));
+
+                    segColl.push(tempGrid);
+                    sourceSeg.addFeature(tempGrid);
+                };
             };
             removeInteractions();
         };
+
         //////////// start on load///////////////
         hideSat();
-        addInteraction();
         vectorLayerListener();
         //toggleStreets();
         buildTrackSet();
