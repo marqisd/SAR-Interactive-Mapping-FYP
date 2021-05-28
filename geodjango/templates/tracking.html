@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <title>Tracking</title>
   </head>
-
+  
 {% block content %}
 <body>
   <form id="createTaskForm" method="post">
@@ -29,9 +29,11 @@
   <input type="checkbox" id="trackOn" name="trackOn" value="trackOn">
   <label for="trackOn">Track Position</label><br>
 </body>
+
 {% endblock %}
 
 
   {% load static %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/NoSleep.js' %}"></script>
     <script src="{% static 'js/trackingHelper.js' %}"></script>

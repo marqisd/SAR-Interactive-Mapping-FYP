@@ -56,3 +56,11 @@ function showPosition(position) {
   Lat.value = position.coords.latitude;
   Lon.value = position.coords.longitude;
 }
+
+/////////////// anitlock using nosleep
+var noSleep = new NoSleep();
+  document.addEventListener('click', function enableNoSleep() {
+    document.removeEventListener('click', enableNoSleep, false);
+    noSleep.enable();
+    console.log('hi');
+  }, false);
