@@ -34,7 +34,7 @@ var trackTimer;
 checkbox.addEventListener('change', function() {
   if (this.checked) {
     Ajax.click()
-    trackTimer = setInterval(function(){ Ajax.click(); }, 60000);
+    trackTimer = setInterval(function(){ Ajax.click(); }, 20000);
   } else {
     Ajax.click()
     clearInterval(trackTimer);
